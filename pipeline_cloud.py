@@ -42,6 +42,7 @@ ANTHROPIC_KEY  = os.environ.get("ANTHROPIC_API_KEY", "")
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 TELEGRAM_CHAT  = os.environ.get("TELEGRAM_CHAT_ID", "")
 GITHUB_TOKEN   = os.environ.get("GITHUB_TOKEN", "")
+SPOTIFY_URL    = os.environ.get("SPOTIFY_URL", "")
 
 BRT            = timezone(timedelta(hours=-3))
 NOW            = datetime.now(BRT)
@@ -192,7 +193,7 @@ Gere os três conteúdos no formato JSON exato abaixo. Não adicione texto fora 
 {{
   "boletim_md": "<markdown completo do boletim semanal>",
   "roteiro_narracao": "<texto corrido 4-5 min TTS, sem $/%/@ — APENAS o texto narrável, sem títulos de seção>",
-  "mensagem_telegram": "<mensagem Telegram 2500-3500 chars com emojis, *bold* e _itálico_, cobrindo todas as seções do boletim de forma completa e detalhada — BOI GO/MT, MILHO GO/MT, SOJA GO/MT, MACRO, POLÍTICA (Revista Oeste), PANORAMA e PROJEÇÕES; inclua [LINK_AUDIO] no final antes da assinatura>"
+  "mensagem_telegram": "<mensagem Telegram 2500-3500 chars com emojis, *bold* e _itálico_, cobrindo todas as seções do boletim de forma completa e detalhada — BOI GO/MT, MILHO GO/MT, SOJA GO/MT, MACRO, POLÍTICA (Revista Oeste), PANORAMA e PROJEÇÕES; no final, antes da assinatura, inclua exatamente estas duas linhas: 🎙️ *Ouça agora:* [LINK_AUDIO] e 🎵 *No Spotify:* [LINK_SPOTIFY]>"
 }}
 
 Para o boletim_md, siga exatamente esta estrutura de seções:
@@ -206,8 +207,12 @@ Para o boletim_md, siga exatamente esta estrutura de seções:
 🔎 PROJEÇÕES — PRÓXIMA SEMANA
 Assinatura com placeholder [LINK DO PODCAST]
 
-Para o roteiro_narracao, inicie com "Bom dia, produtor." e termine com "Nutrição estratégica. Resultado no campo. Até a próxima."
-Estrutura: abertura → boi → milho → soja → macro → política → panorama → projeções → encerramento."""
+Para o roteiro_narracao:
+- PROIBIDO se apresentar ou mencionar nome, cargo ou empresa na abertura
+- Inicie DIRETAMENTE com "Bom dia, produtor e produtora rural." seguido da data e já vá para as notícias
+- Tom jornalístico direto — sem jingle, sem vinheta, sem "você está ouvindo o Boletim CampoFort"
+- Termine com "Nutrição estratégica. Resultado no campo. Até a próxima quarta."
+Estrutura: abertura (data) → boi → milho → soja → macro → política → panorama → projeções → encerramento."""
 
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
@@ -564,7 +569,10 @@ def main():
     # ── 6. Enviar Telegram ──────────────────────────────
     print("\n[6/6] Enviando boletim e áudio via Telegram...")
 
-    tg_message = content["mensagem_telegram"].replace("[LINK_AUDIO]", audio_url)
+    spotify_link = SPOTIFY_URL if SPOTIFY_URL else "_(em breve no Spotify)_"
+    tg_message = (content["mensagem_telegram"]
+                  .replace("[LINK_AUDIO]", audio_url)
+                  .replace("[LINK_SPOTIFY]", spotify_link))
 
     # Salva sempre (auditoria / fallback)
     TG_PATH.write_text(tg_message, encoding="utf-8")
