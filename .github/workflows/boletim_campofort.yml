@@ -2,8 +2,8 @@ name: Boletim CampoFort Semanal
 
 on:
   schedule:
-    # Toda quarta-feira às 08:00 horário de Brasília (UTC-3 = 11:00 UTC)
-    - cron: '0 11 * * 3'
+    # Toda quarta-feira às 07:00 horário de Brasília (UTC-3 = 10:00 UTC)
+    - cron: '0 10 * * 3'
 
   # Permite rodar manualmente pelo GitHub: Actions → Run workflow
   workflow_dispatch:
