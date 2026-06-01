@@ -1,0 +1,58 @@
+{
+    "podcast":  {
+                    "title":  "Boletim CampoFort",
+                    "description":  "Boletim semanal CampoFort — análise de mercado de boi gordo, milho e soja em Goiás e Mato Grosso, com leitura política, panorama regulatório e projeções. Apresentação: Daniel Rodrigues, CEO da CampoFort.",
+                    "author":  "Daniel Rodrigues — CampoFort",
+                    "email":  "danielsilva.rodrigues.drs@gmail.com",
+                    "language":  "pt-BR",
+                    "category":  "Business",
+                    "subcategory":  "Agriculture",
+                    "image_url":  "",
+                    "site_url":  "https://campofort.com.br",
+                    "explicit":  false,
+                    "github_repo":  "danielsilvarodriguesdrs-ship-it/podcast-campofort",
+                    "github_release_tag":  "audio"
+                },
+    "episodios":  [
+                      {
+                          "data":  "2026-05-27",
+                          "titulo":  "Boletim CampoFort — 27/05/2026",
+                          "descricao":  "Boi gordo GO R$ 322,50/@ e MT R$ 341/@ com cota chinesa no limite do esgotamento. Milho GO R$ 62,50/sc sustenta prêmio climático; MT R$ 42,50/sc com safrinha chegando. Soja Sul Goiano R$ 112,80/sc. Política: Revista Oeste aponta que agro resiste sem apoio federal; Plano Safra 2026/27 aguardado para junho.",
+                          "duracao_seg":  270,
+                          "audio_url":  "",
+                          "mp3_local":  "podcast_campofort_20260527.mp3"
+                      },
+                      {
+                          "data":  "2026-05-20",
+                          "titulo":  "Boletim CampoFort — 20/05/2026",
+                          "descricao":  "Boi gordo GO R$ 327/@, MT R$ 346/@; cota chinesa de 1,1 mi t perto do esgotamento. Milho com Norte MT a R$ 43,51/sc e GO sustentando ~R$ 60/sc por estresse hidrico na safrinha. Soja Sorriso R$ 98,39/sc. Politica: crise no Plano Safra 2026/27, FPA pede R$ 599 bi.",
+                          "duracao_seg":  270,
+                          "audio_url":  "",
+                          "mp3_local":  "podcast_campofort_20260520.mp3"
+                      },
+                      {
+                          "data":  "2026-05-13",
+                          "titulo":  "Boletim CampoFort — 13/05/2026",
+                          "descricao":  "Boi gordo GO R$ 332/@, MT R$ 346/@; pressão sazonal pós-Dia das Mães. ALERTA: UE veta carne brasileira a partir de set/26 por antimicrobianos. Milho em queda com safrinha. Soja firme GO R$ 112/sc.",
+                          "duracao_seg":  270,
+                          "audio_url":  "",
+                          "mp3_local":  "podcast_campofort_20260513.mp3"
+                      },
+                      {
+                          "data":  "2026-05-12",
+                          "titulo":  "Boletim CampoFort — 12/05/2026",
+                          "descricao":  "Boi gordo em GO a R$ 334/@, MT a R$ 353,75/@; queda sazonal com alerta de esgotamento da cota chinesa entre fim de maio e meados de junho. Milho com estresse hidrico em GO sustentando premio. Soja firme. Politica: FPA cobra Plano Safra de R$ 599 bi na Agrishow.",
+                          "duracao_seg":  270,
+                          "audio_url":  "https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260512.mp3",
+                          "mp3_local":  "podcast_campofort_20260512.mp3"
+                      },
+                      {
+                          "data":  "2026-05-07",
+                          "titulo":  "Boletim CampoFort — 07/05/2026",
+                          "descricao":  "Boi gordo em Goiás a R$ 334/@, MT a R$ 339,71/@. Milho com sinal amarelo na safrinha goiana. Soja firme com câmbio sustentado. Política: Congresso rejeita IOF e bancada do agro cobra Plano Safra. Panorama: Mercosul-UE em vigor.",
+                          "duracao_seg":  270,
+                          "audio_url":  "",
+                          "mp3_local":  "podcast_campofort_20260507.mp3"
+                      }
+                  ]
+}

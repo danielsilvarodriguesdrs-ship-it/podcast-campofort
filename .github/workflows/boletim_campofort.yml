@@ -1,0 +1,71 @@
+name: Boletim CampoFort Semanal
+
+on:
+  schedule:
+    # Toda quarta-feira às 08:00 horário de Brasília (UTC-3 = 11:00 UTC)
+    - cron: '0 11 * * 3'
+
+  # Permite rodar manualmente pelo GitHub: Actions → Run workflow
+  workflow_dispatch:
+
+jobs:
+  gerar-boletim:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # Para commitar RSS + fazer upload no Releases
+
+    steps:
+      # 1. Checkout do repositório
+      - name: Checkout repositório
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2. Python 3.11
+      - name: Configurar Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Instalar dependências
+      - name: Instalar dependências
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements_cloud.txt
+
+      # 4. Rodar pipeline (gera boletim, áudio, RSS, envia Telegram)
+      - name: Executar pipeline CampoFort
+        env:
+          ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO:        ${{ github.repository }}
+        run: python pipeline_cloud.py
+
+      # 5. Commitar arquivos gerados de volta ao repositório
+      #    (boletim, roteiro, mensagem Telegram, RSS, episodios.json)
+      - name: Commitar arquivos gerados
+        run: |
+          git config user.name  "CampoFort Bot"
+          git config user.email "bot@campofort.com.br"
+          git add \
+            boletim_semanal_campofort_*.md \
+            roteiro_podcast_campofort_*.md \
+            mensagem_telegram_*.txt \
+            podcast_feed.xml \
+            episodios.json \
+            || true
+          git diff --staged --quiet || \
+            git commit -m "🌾 Boletim CampoFort — $(date +'%d/%m/%Y')"
+          git push || true
+
+      # 6. Upload do MP3 como artefato da Action (disponível por 7 dias)
+      - name: Salvar MP3 como artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: podcast-campofort-${{ github.run_id }}
+          path: podcast_campofort_*.mp3
+          retention-days: 7
+          if-no-files-found: warn
