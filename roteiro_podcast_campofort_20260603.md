@@ -1,38 +1,48 @@
-# Roteiro Podcast CampoFort — 03/06/2026
-**Voz:** masculina firme, ritmo cadenciado, autoridade técnica
-**Duração-alvo:** 4 a 5 minutos
-**Voz TTS recomendada:** pt-BR-AntonioNeural (Edge TTS)
+# Roteiro Podcast CampoFort - 03/06/2026
+**Voz:** OpenAI TTS 'onyx' | fallback: Edge TTS
 
 ---
 
-## ROTEIRO PARA NARRAÇÃO (texto corrido — sem cifrão, percentual ou barra)
+## ROTEIRO PARA NARRACAO
 
-Bom dia, produtor e produtora rural. Quarta-feira, três de junho de dois mil e vinte e seis. Vamos aos números da semana.
+Bom dia, produtor e produtora rural. Este é o Boletim Informativo CampoFort, apresentado por Daniel Rodrigues. Hoje é quarta-feira, 03 de junho de 2026. Vamos aos mercados.
 
-Boi gordo segue em trajetória estável em Goiás e Mato Grosso. Em Goiânia, o preço à vista fecha em trezentos e vinte e um reais e cinquenta centavos por arroba, com operações a prazo em trezentos e vinte e cinco reais. Mato Grosso, em especial Cuiabá, opera em patamar superior — trezentos e quarenta e três reais à vista, trezentos e quarenta e sete a prazo. Esse diferencial positivo de vinte e dois reais reflete vantagem logística e proximidade com plantas frigoríficas de exportação. Contratos futuros na B3 indicam estabilidade até dezembro, fechando em trezentos e cinquenta e seis reais e vinte e cinco centavos. O mercado absorve oferta com moderação. Bezerro segue em três mil quatrocentos e dezesseis reais em Mato Grosso do Sul.
+**BOI GORDO**
 
-Millho sob pressão. O indicador Esalq de ontem marca sessenta e quatro reais e cinquenta e quatro centavos por saca de sessenta quilos, queda de zero virgula trinta e quatro por cento. Chicago acompanha movimento de recuo — julho em quatro dólares e quarenta e cinco centavos, com perdas acumuladas que alcançam quase um por cento. Em Mato Grosso, Primavera do Leste cotava quarenta e quatro reais e trinta centavos na segunda. Perspectiva: suporte esperado ao redor de sessenta reais até colheita da safra 2026 a 2027. Armazenagem e frete seguem pressionando margens no Centro-Oeste.
+Em Goiás, o boi à vista fecha em R$ 321,50 por arroba, com prazo de 30 dias em R$ 325,00. Em Mato Grosso, a praça de Cuiabá opera a R$ 343,00 a arroba à vista, R$ 347,00 no prazo. Os futuros da B3 mostram recuperação: junho em R$ 352,00, julho em R$ 344,45. O mercado ESALQ/B3 registra R$ 352,30 à vista, com variação positiva de 0,60% em relação ao dia anterior.
 
-Soja igualmente sobre pressão externa. Paranaguá em cento e vinte e oito reais e setenta e quatro centavos, recuo de um virgula dezesseis por cento. Chicago julho negocia onze dólares e sessenta e cinco centavos, com perdas que alcançam um virgula trinta e um por cento. A dinâmica reflete colheita americana robusta e preocupações de demanda chinesa. Prêmios de exportação permanecem positivos, acima de vinte e cinco centavos de dólar por bushel. Estrutura de futuros oferece visibilidade para operações de travamento.
+**MILHO**
 
-Macro. Taxa Selic em patamar restritivo, quatorze vírgula cinquenta por cento ao ano. Dólar indisponível no fechamento, mas volatilidade permanece como fator de risco. Recomendação: operacionalizar trava cambial para evitar impacto de flutuações bruscas nas contas de custo.
+O milho ESALQ/B3 cede 0,34%, cotado a R$ 64,54 por saca de 60 quilogramas. Nos futuros da B3, julho negocia a R$ 64,56, com queda de 0,94%. Setembro sobe para R$ 66,96, recuando 1,17%. Em Chicago, o contrato de julho fecha a US$ 4,4050 por bushel, queda de 0,79%.
 
-Política da semana. Revista Oeste destaca movimento significativo: China suspende restrições e libera importação de carne bovina do Brasil. A medida reforça demanda externa e reduz barreiras comerciais. Acompanhe cobertura em revistaoeste ponto com. Alerta importante de Mato Grosso: risco de desabastecimento de sal mineral; produtor deve antecipar compras. Clima extremo em Mato Grosso do Sul causou mortalidade em rebanho — reforça importância de manejo nutricional preventivo.
+**SOJA**
 
-Panorama comercial. Mapa disponibiliza doze vírgula três milhões de doses contra clostridioses. Comissões de pecuária reforçam prazos de atualização de rebanho. Exportação com sinais positivos; frigoríficos continuam recebendo liberações.
+A soja Paranaguá cede 1,16%, cotada a R$ 128,74 por saca. O indicador do Paraná recua 0,47%, em R$ 123,94. Nos futuros B3, setembro em US$ 25,70 por saca, queda de 0,81%. Em Chicago, julho fecha a US$ 11,6525 por bushel, retração de 1,31%. O prêmio Paranaguá mantém-se estável em +US$ 0,25 por bushel.
 
-Projeções próxima semana. Boi gordo tende consolidar suporte nos níveis atuais, demanda moderada internamente, exportação como boia de salvação. Milho segue sob pressão; possível teste de suporte em sessenta reais — monitore clima dos EUA. Soja mantém pressão; estrutura de futuros indica movimento de rolagem em setembro. Macro: expectativa de movimento do Banco Central em próxima decisão de Selic. Dólar volátil, recomenda-se proteção cambial nas operações.
+**MACRO**
 
-Nutrição estratégica. Resultado no campo. Até a próxima quarta.
+O dólar encerrou hoje indisponível para consulta. A taxa Selic permanece estável em 14,50% ao ano. Sem dados dos últimos 5 dias, recomendamos acompanhamento junto aos índices oficiais.
+
+**POLÍTICA**
+
+DESTAQUE — Revista Oeste informa: China suspende restrições e libera importação de carne bovina do Brasil, abrindo oportunidades para exportadores brasileiros.
+
+DESTAQUE — Revista Oeste: Frio mata 83 bovinos em Mato Grosso do Sul, conforme comunicado da agência estadual. Pecuaristas devem redobrar cuidados sanitários.
+
+DESTAQUE — Revista Oeste: Desenrola Rural exige cautela para não transformar alívio financeiro em risco patrimonial, alerta especialista.
+
+DESTAQUE — Revista Oeste: Idosa se ajoelha para tentar impedir desapropriação em Goiás. Caso reacende debate sobre propriedade rural.
+
+**PANORAMA**
+
+Mato Grosso enfrenta risco de desabastecimento de sal mineral, impactando diretamente custos de pecuária. A Famato reforça prazo para atualização de rebanho. O MAPA disponibiliza 12,3 milhões de doses de vacinas contra clostridioses, reforçando programas de sanidade. Mercado de boi mantém viés altista em GO e MT, mas pressão em insumos limita margens.
+
+**ENCERRAMENTO**
+
+Nutrição estratégica. Resultado no campo. Até a próxima quarta-feira.
+
+Daniel Rodrigues | CampoFort
 
 ---
 
-## BLOCOS CRONOMETRADOS (referência)
-1. Abertura — 15s
-2. Boi gordo GO/MT — 60s
-3. Milho GO/MT — 50s
-4. Soja GO/MT — 35s
-5. Macro — 35s
-6. Política Revista Oeste — 55s
-7. Panorama regulatório — 40s
-8. Projeções e encerramento — 50s
+## BLOCOS: Abertura 15s | Boi 60s | Milho 50s | Soja 35s | Macro 40s | Politica 55s | Panorama 40s | Encerramento 50s

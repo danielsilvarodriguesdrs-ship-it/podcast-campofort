@@ -16,9 +16,9 @@
     "episodios": [
         {
             "data": "2026-06-03",
-            "titulo": "Boletim CampoFort — 03/06/2026",
-            "descricao": "Boi gordo GO R$ 332,86/@ e MT R$ 353,24/@ em alta técnica; cota chinesa no limite. Milho GO R$ 55,42/sc com safrinha chegando; MT R$ 45,90/sc. Soja Sul Goiano R$ 111,09/sc. Política: CNA pede R$ 623 bi para Plano Safra 2026/27.",
-            "duracao_seg": 270,
+            "titulo": "Boletim CampoFort - 03/06/2026",
+            "descricao": "Boletim CampoFort - 03/06/2026",
+            "duracao_seg": 240,
             "audio_url": "https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3",
             "mp3_local": "podcast_campofort_20260603.mp3"
         },
