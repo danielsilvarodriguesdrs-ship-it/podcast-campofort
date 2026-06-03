@@ -1,40 +1,79 @@
-*BOLETIM CAMPOFORT | Quarta, 03/06/2026*
+*🌾 BOLETIM CAMPOFORT | 03/06/2026*
 
-*BOI GORDO*
-🐮 *Goiás:* R$ 321,50/@ (à vista) | R$ 325,00/@ (prazo 30d)
-🐮 *Mato Grosso:* R$ 343,00/@ (Cuiabá) | R$ 342,00/@ (Sudeste)
-📊 *B3:* Jun R$ 352,00 | Jul R$ 344,45 | Ago R$ 343,55
+*Bom dia, produtor.*
 
-*MILHO*
-🌾 *ESALQ/B3:* R$ 64,54/sc (-0,34%)
-📈 *B3 Jul/26:* R$ 64,56/sc (-0,94%)
-📈 *B3 Set/26:* R$ 66,96/sc (-1,17%)
+---
 
-*SOJA*
-🌱 *Paranaguá:* R$ 128,74/sc (-1,16%)
-🌱 *Paraná:* R$ 123,94/sc (-0,47%)
-📈 *B3 Set/26:* US$ 25,70/sc (-0,81%)
+*💰 BOI GORDO*
 
-*MACRO*
-💵 *Dólar:* Indisponível
-📊 *Selic:* 14,50% ao ano
+*Goiás*
+• À vista: *R$ 321,50/@*
+• Prazo 30d: *R$ 325,00/@*
 
-*POLÍTICA — Revista Oeste*
-▶️ China libera importação de carne bovina do Brasil
+*Mato Grosso*
+• Cuiabá (à vista): *R$ 343,00/@*
+• Cuiabá (prazo): *R$ 347,00/@*
+
+_B3 Junho: R$ 351,20/@ (-0,21%) | Julho: R$ 343,00/@ (-0,38%)_
+
+---
+
+*🌽 MILHO*
+
+*Indicador CEPEA:* R$ 64,54/sc (-0,34%)
+
+*B3 - Contratos:*
+• Julho: R$ 65,18/sc (+0,96%)
+• Setembro: R$ 68,13/sc (+1,75%)
+• Janeiro/27: R$ 73,90/sc (+0,98%)
+
+_Chicago Julho: US$ 4,31/bu (-2,04%) ⬇️_
+
+---
+
+*🫘 SOJA*
+
+*CEPEA Paranaguá:* R$ 128,74/sc (-1,16%)
+*CEPEA Paraná:* R$ 123,94/sc (-0,47%)
+
+*B3 - Contratos:*
+• Agosto: US$ 25,60/sc (-2,44%)
+• Setembro: US$ 25,53/sc (-0,66%)
+• Novembro: US$ 25,72/sc (-0,85%)
+
+_Chicago Julho: US$ 11,54/bu (-0,97%) ⬇️_
+
+---
+
+*📊 MACRO*
+
+💵 *Dólar:* Indisponível (USDBRL)
+🏦 *SELIC:* *14,50% ao ano*
+
+---
+
+*📰 DESTAQUE POLÍTICA _(Revista Oeste)_*
+
+▶️ China suspende restrições e libera importação de carne bovina do Brasil
+
+▶️ Desenrola Rural exige cautela para não transformar alívio em risco patrimonial
+
 ▶️ Frio mata 83 bovinos em Mato Grosso do Sul
-▶️ Desenrola Rural: cautela contra risco patrimonial
-▶️ Caso de desapropriação em Goiás reacende debate sobre propriedade rural
 
-*ALERTA REGULATÓRIO*
-⚠️ *Mato Grosso:* Risco de desabastecimento de sal mineral
-⚠️ *Sanidade:* MAPA libera 12,3 mi de doses de vacinas contra clostridioses
-⚠️ *Pecuária:* Rebanho deve ser atualizado conforme prazo da Famato
+▶️ Famato alerta para risco de desabastecimento de sal mineral em MT
 
-*ANÁLISE*
- GO e MT apresentam boi com viés altista, mas pressão em insumos e sal mineral reduz margens. Milho cede em Chicago (-0,79%); soja recua moderadamente. Abertura de mercado chinês para carne bovina brasileira é positiva para pecuaristas.
+---
+
+*📋 ANÁLISE*
+
+Boi mantém estabilidade. Diferencial GO-MT em *R$ 21,50/@*. Milho recua com Chicago em queda (-2,04%). Soja sob pressão internacional. *Taxa SELIC em 14,50% ao ano* mantém custos elevados para confinamento.
+
+*Próximos contratos de boi (B3):* Setembro em alta de +0,28% sinaliza recuperação gradual.
+
+---
 
 *Ouça o episódio completo:*
-https://open.spotify.com/show/[ID]
+https://open.spotify.com/show/033s9dJplOa8SpCMY7EXnd
 
 _Daniel Rodrigues | CampoFort_
 _Nutrição estratégica. Resultado no campo._

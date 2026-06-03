@@ -9,39 +9,45 @@ Bom dia, produtor e produtora rural. Este é o Boletim Informativo CampoFort, ap
 
 **BOI GORDO**
 
-Em Goiás, o boi à vista fecha em R$ 321,50 por arroba, com prazo de 30 dias em R$ 325,00. Em Mato Grosso, a praça de Cuiabá opera a R$ 343,00 a arroba à vista, R$ 347,00 no prazo. Os futuros da B3 mostram recuperação: junho em R$ 352,00, julho em R$ 344,45. O mercado ESALQ/B3 registra R$ 352,30 à vista, com variação positiva de 0,60% em relação ao dia anterior.
+Em Goiás, o boi gordo à vista é cotado em R$ 321,50 por arroba, com prazo de 30 dias em R$ 325,00 por arroba.
+
+Em Mato Grosso, a cotação em Cuiabá é de R$ 343,00 por arroba à vista e R$ 347,00 por arroba a prazo. Na região Sudeste, observamos R$ 342,00 por arroba à vista e R$ 346,00 por arroba a prazo.
+
+Na bolsa B3, ontem fechamos: junho em R$ 351,20 por arroba com queda de 0,21%; julho em R$ 343,00 por arroba com recuo de 0,38%; setembro apontando recuperação com alta de 0,28% em R$ 345,50 por arroba.
 
 **MILHO**
 
-O milho ESALQ/B3 cede 0,34%, cotado a R$ 64,54 por saca de 60 quilogramas. Nos futuros da B3, julho negocia a R$ 64,56, com queda de 0,94%. Setembro sobe para R$ 66,96, recuando 1,17%. Em Chicago, o contrato de julho fecha a US$ 4,4050 por bushel, queda de 0,79%.
+O milho fechou em R$ 64,54 por saca de 60 quilos, com queda de 0,34%. Em Chicago, julho recuou 2,04% para US$ 4,31 por bushel, sinalizando pressão internacional.
+
+Na B3, julho está em R$ 65,18 por saca com alta de 0,96%; setembro em R$ 68,13 por saca; janeiro de 2027 em R$ 73,90 por saca, sugerindo valorização para contratos mais longos.
 
 **SOJA**
 
-A soja Paranaguá cede 1,16%, cotada a R$ 128,74 por saca. O indicador do Paraná recua 0,47%, em R$ 123,94. Nos futuros B3, setembro em US$ 25,70 por saca, queda de 0,81%. Em Chicago, julho fecha a US$ 11,6525 por bushel, retração de 1,31%. O prêmio Paranaguá mantém-se estável em +US$ 0,25 por bushel.
+Soja fecha com pressão. Paranaguá em R$ 128,74 por saca, queda de 1,16%. Paraná em R$ 123,94 por saca, recuo de 0,47%.
 
-**MACRO**
+Chicago apresenta queda de 0,97% em julho para US$ 11,54 por bushel.
 
-O dólar encerrou hoje indisponível para consulta. A taxa Selic permanece estável em 14,50% ao ano. Sem dados dos últimos 5 dias, recomendamos acompanhamento junto aos índices oficiais.
+B3: agosto em US$ 25,60 por saca; setembro em US$ 25,53 por saca; novembro em US$ 25,72 por saca.
 
-**POLÍTICA**
+**CENÁRIO MACROECONÔMICO**
 
-DESTAQUE — Revista Oeste informa: China suspende restrições e libera importação de carne bovina do Brasil, abrindo oportunidades para exportadores brasileiros.
+O dólar permanece indisponível na cotação oficial. A taxa SELIC está em 14,50% ao ano, mantendo pressão estrutural em custos de financiamento para operações de confinamento.
 
-DESTAQUE — Revista Oeste: Frio mata 83 bovinos em Mato Grosso do Sul, conforme comunicado da agência estadual. Pecuaristas devem redobrar cuidados sanitários.
+**DESTAQUES POLÍTICA**
 
-DESTAQUE — Revista Oeste: Desenrola Rural exige cautela para não transformar alívio financeiro em risco patrimonial, alerta especialista.
+Segundo a Revista Oeste:
 
-DESTAQUE — Revista Oeste: Idosa se ajoelha para tentar impedir desapropriação em Goiás. Caso reacende debate sobre propriedade rural.
+DESTAQUE: China suspende restrições e libera importação de carne bovina brasileira. Movimento estratégico para recuperação de presença no principal mercado consumidor.
+
+DESTAQUE: Especialista alerta que Desenrola Rural exige cautela para não transformar alívio financeiro em risco patrimonial. Produtor precisa de planejamento estruturado nas operações de reestruturação.
+
+DESTAQUE: Frio mata 83 bovinos em Mato Grosso do Sul. Evento climático preocupa pecuaristas na região.
 
 **PANORAMA**
 
-Mato Grosso enfrenta risco de desabastecimento de sal mineral, impactando diretamente custos de pecuária. A Famato reforça prazo para atualização de rebanho. O MAPA disponibiliza 12,3 milhões de doses de vacinas contra clostridioses, reforçando programas de sanidade. Mercado de boi mantém viés altista em GO e MT, mas pressão em insumos limita margens.
-
-**ENCERRAMENTO**
+Boi gordo mantém estabilidade técnica. Diferencial Goiás-Mato Grosso permanece em torno de R$ 21,50 por arroba, refletindo prêmio de localização. Contratos futuros na B3 sinalizam recuperação gradual a partir de outubro. Milho sofre influência direta de Chicago em queda, com janeiro 2027 oferecendo prêmio significativo em R$ 73,90 por saca. Soja sob pressão internacional. Atenção: Famato alerta para risco de desabastecimento de sal mineral em Mato Grosso, elevando custos de pecuária.
 
 Nutrição estratégica. Resultado no campo. Até a próxima quarta-feira.
-
-Daniel Rodrigues | CampoFort
 
 ---
 
