@@ -14,7 +14,16 @@
       <itunes:category text="Agriculture" />
     </itunes:category>
     <itunes:explicit>False</itunes:explicit>
-    <lastBuildDate>Tue, 12 May 2026 03:23:46 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jun 2026 10:00:00 -0300</lastBuildDate>
+    <item>
+      <title>Boletim CampoFort — 03/06/2026</title>
+      <description>Boi gordo GO R$ 332,86/@ e MT R$ 353,24/@ em alta tecnica. Milho GO R$ 55,42/sc; MT R$ 45,90/sc. Soja Sul Goiano R$ 111,09/sc. Politica: CNA pede R$ 623 bi para Plano Safra 2026/27.</description>
+      <pubDate>Wed, 03 Jun 2026 10:00:00 -0300</pubDate>
+      <guid isPermaLink="false">campofort-20260603</guid>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="0" type="audio/mpeg"/>
+      <itunes:duration>270</itunes:duration>
+      <itunes:author>Daniel Rodrigues — CampoFort</itunes:author>
+    </item>
     <item>
       <title>Boletim CampoFort - 03/06/2026</title>
       <description>Boletim CampoFort - 03/06/2026</description>
