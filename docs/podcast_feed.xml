@@ -5,15 +5,17 @@
     <link>https://campofort.com.br</link>
     <description>Boletim semanal CampoFort — análise de mercado de boi gordo, milho e soja em Goiás e Mato Grosso, com leitura política, panorama regulatório e projeções. Apresentação: Daniel Rodrigues, CEO da CampoFort.</description>
     <language>pt-BR</language>
-    <itunes:author>Daniel Rodrigues — CampoFort</itunes:author>
+    <itunes:author>Daniel Rodrigues</itunes:author>
     <itunes:owner>
-      <itunes:name>Daniel Rodrigues — CampoFort</itunes:name>
+      <itunes:name>Daniel Rodrigues</itunes:name>
       <itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email>
     </itunes:owner>
+    <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
+    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg"/>
     <itunes:category text="Business">
       <itunes:category text="Agriculture" />
     </itunes:category>
-    <itunes:explicit>False</itunes:explicit>
+    <itunes:explicit>false</itunes:explicit>
     <lastBuildDate>Wed, 03 Jun 2026 10:00:00 -0300</lastBuildDate>
     <item>
       <title>Boletim CampoFort — 03/06/2026</title>
