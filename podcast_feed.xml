@@ -1,21 +1,35 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<?xml version='1.0' encoding='utf-8'?>
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
   <channel>
     <title>Boletim CampoFort</title>
     <link>https://campofort.com.br</link>
     <description>Boletim semanal CampoFort — análise de mercado de boi gordo, milho e soja em Goiás e Mato Grosso, com leitura política, panorama regulatório e projeções. Apresentação: Daniel Rodrigues, CEO da CampoFort.</description>
     <language>pt-BR</language>
     <itunes:author>Daniel Rodrigues — CampoFort</itunes:author>
-    <itunes:owner><itunes:name>Daniel Rodrigues — CampoFort</itunes:name><itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email></itunes:owner>
-    <itunes:category text="Business"><itunes:category text="Agriculture"/></itunes:category>
+    <itunes:owner>
+      <itunes:name>Daniel Rodrigues — CampoFort</itunes:name>
+      <itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email>
+    </itunes:owner>
+    <itunes:category text="Business">
+      <itunes:category text="Agriculture" />
+    </itunes:category>
     <itunes:explicit>False</itunes:explicit>
     <lastBuildDate>Tue, 12 May 2026 03:23:46 +0000</lastBuildDate>
+    <item>
+      <title>Boletim CampoFort — 03/06/2026</title>
+      <description>Daniel Rodrigues | CEO CampoFort</description>
+      <pubDate>Wed, 03 Jun 2026 14:01:03 -0000</pubDate>
+      <guid isPermaLink="false">campofort-20260603</guid>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="1440720" type="audio/mpeg" />
+      <itunes:duration>240</itunes:duration>
+      <itunes:summary>Daniel Rodrigues | CEO CampoFort</itunes:summary>
+    </item>
     <item>
       <title>Boletim CampoFort - 12/05/2026</title>
       <description>Boletim CampoFort com analise de mercado de boi gordo, milho e soja em Goias e Mato Grosso, mais leitura politica e panorama regulatorio.</description>
       <pubDate>Tue, 12 May 2026 06:00:00 -0300</pubDate>
       <guid isPermaLink="false">campofort-2026-05-12</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260512.mp3" length="1806048" type="audio/mpeg"/>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260512.mp3" length="1806048" type="audio/mpeg" />
       <itunes:duration>00:04:30</itunes:duration>
       <itunes:author>Daniel Rodrigues — CampoFort</itunes:author>
     </item>
