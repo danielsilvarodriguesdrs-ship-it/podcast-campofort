@@ -1,57 +1,41 @@
-<?xml version='1.0' encoding='utf-8'?>
-<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" version="2.0">
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
     <title>Boletim CampoFort</title>
     <link>https://campofort.com.br</link>
-    <description>Boletim semanal CampoFort — análise de mercado de boi gordo, milho e soja em Goiás e Mato Grosso, com leitura política, panorama regulatório e projeções. Apresentação: Daniel Rodrigues, CEO da CampoFort.</description>
+    <description>Boletim semanal de mercado agropecuario - Goias e Mato Grosso. Boi gordo, milho e soja. Apresentacao: Daniel Rodrigues, CEO CampoFort.</description>
     <language>pt-BR</language>
+    <lastBuildDate>Wed, 03 Jun 2026 10:00:00 -0300</lastBuildDate>
+    <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
     <itunes:author>Daniel Rodrigues</itunes:author>
     <itunes:owner>
       <itunes:name>Daniel Rodrigues</itunes:name>
       <itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email>
     </itunes:owner>
-    <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
-    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg" />
+    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg"/>
     <itunes:category text="Business">
-      <itunes:category text="Agriculture" />
+      <itunes:category text="Agriculture"/>
     </itunes:category>
     <itunes:explicit>false</itunes:explicit>
-    <lastBuildDate>Wed, 03 Jun 2026 10:00:00 -0300</lastBuildDate>
     <item>
       <title>Boletim CampoFort - 03/06/2026</title>
-      <description>Boletim CampoFort - 03/06/2026</description>
-      <pubDate>Wed, 03 Jun 2026 20:18:30 -0000</pubDate>
-      <guid isPermaLink="false">campofort-20260603</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="1459440" type="audio/mpeg" />
-      <itunes:duration>240</itunes:duration>
-      <itunes:summary>Boletim CampoFort - 03/06/2026</itunes:summary>
-    </item>
-    <item>
-      <title>Boletim CampoFort — 03/06/2026</title>
-      <description>Boi gordo GO R$ 332,86/@ e MT R$ 353,24/@ em alta tecnica. Milho GO R$ 55,42/sc; MT R$ 45,90/sc. Soja Sul Goiano R$ 111,09/sc. Politica: CNA pede R$ 623 bi para Plano Safra 2026/27.</description>
+      <description>Boi gordo GO R$ 332,86/@ e MT R$ 353,24/@. Milho GO R$ 55,42/sc; MT R$ 45,90/sc. Soja Sul Goiano R$ 111,09/sc. Politica: CNA pede R$ 623 bi para Plano Safra 2026/27.</description>
       <pubDate>Wed, 03 Jun 2026 10:00:00 -0300</pubDate>
       <guid isPermaLink="false">campofort-20260603</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="0" type="audio/mpeg" />
-      <itunes:duration>270</itunes:duration>
-      <itunes:author>Daniel Rodrigues — CampoFort</itunes:author>
-    </item>
-    <item>
-      <title>Boletim CampoFort - 03/06/2026</title>
-      <description>Boletim CampoFort - 03/06/2026</description>
-      <pubDate>Wed, 03 Jun 2026 15:25:02 -0000</pubDate>
-      <guid isPermaLink="false">campofort-20260603</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="1374480" type="audio/mpeg" />
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="1459440" type="audio/mpeg"/>
       <itunes:duration>240</itunes:duration>
-      <itunes:summary>Boletim CampoFort - 03/06/2026</itunes:summary>
+      <itunes:author>Daniel Rodrigues</itunes:author>
     </item>
     <item>
       <title>Boletim CampoFort - 12/05/2026</title>
-      <description>Boletim CampoFort com analise de mercado de boi gordo, milho e soja em Goias e Mato Grosso, mais leitura politica e panorama regulatorio.</description>
+      <description>Boi gordo GO R$ 334/@, MT R$ 353,75/@. Alerta de esgotamento da cota chinesa. Milho com estresse hidrico em GO. Soja firme.</description>
       <pubDate>Tue, 12 May 2026 06:00:00 -0300</pubDate>
-      <guid isPermaLink="false">campofort-2026-05-12</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260512.mp3" length="1806048" type="audio/mpeg" />
-      <itunes:duration>00:04:30</itunes:duration>
-      <itunes:author>Daniel Rodrigues — CampoFort</itunes:author>
+      <guid isPermaLink="false">campofort-20260512</guid>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260512.mp3" length="1806048" type="audio/mpeg"/>
+      <itunes:duration>270</itunes:duration>
+      <itunes:author>Daniel Rodrigues</itunes:author>
     </item>
   </channel>
 </rss>
