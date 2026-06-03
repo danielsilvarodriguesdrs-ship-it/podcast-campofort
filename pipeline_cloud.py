@@ -282,7 +282,7 @@ def send_telegram(message):
 # ── Main ──────────────────────────────────────────────────────────────────────
 def main():
     print(f"\n{'='*55}\n  PIPELINE CAMPOFORT - {DATE_BR}\n{'='*55}\n")
-    if BOLETIM_PATH.exists(): print(f"Boletim {BOLETIM_PATH} ja existe. Encerrando."); return
+    if MP3_PATH.exists(): print(f"Audio {MP3_PATH} ja existe. Encerrando."); return
 
     print("[1/6] Coletando dados...")
     data=gather_market_data()
