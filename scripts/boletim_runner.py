@@ -191,19 +191,43 @@ def generate_content() -> tuple[str, str]:
 
 
 # ─── Geração de áudio (OpenAI TTS) ───────────────────────────────────────────
+def _split_text(text: str, max_chars: int = 4000) -> list[str]:
+    """Divide o texto em blocos ≤ max_chars, quebrando em fim de frase."""
+    chunks, current = [], ""
+    for sentence in text.replace("\n", " \n ").split(". "):
+        candidate = current + sentence + ". "
+        if len(candidate) <= max_chars:
+            current = candidate
+        else:
+            if current:
+                chunks.append(current.strip())
+            current = sentence + ". "
+    if current.strip():
+        chunks.append(current.strip())
+    return chunks or [text[:max_chars]]
+
+
 def generate_audio(roteiro: str) -> bytes:
-    """Gera MP3 via OpenAI TTS modelo tts-1-hd, voz 'onyx' (masculina, grave, natural)."""
+    """Gera MP3 via OpenAI TTS tts-1-hd, voz 'onyx'. Divide automaticamente se > 4000 chars."""
     print("🎙️ Gerando áudio com OpenAI TTS (voz onyx)...")
 
     client = OpenAI(api_key=OPENAI_API_KEY)
-    response = client.audio.speech.create(
-        model="tts-1-hd",   # alta definição
-        voice="onyx",        # masculina, grave, profissional
-        input=roteiro,
-        response_format="mp3",
-        speed=0.95           # leve redução — cadência mais natural para noticiário
-    )
-    return response.content
+    chunks = _split_text(roteiro)
+    print(f"  📄 Roteiro dividido em {len(chunks)} bloco(s) de áudio")
+
+    audio_parts: list[bytes] = []
+    for i, chunk in enumerate(chunks):
+        print(f"  🔊 Gerando bloco {i + 1}/{len(chunks)} ({len(chunk)} chars)...")
+        response = client.audio.speech.create(
+            model="tts-1-hd",
+            voice="onyx",
+            input=chunk,
+            response_format="mp3",
+            speed=0.95
+        )
+        audio_parts.append(response.content)
+
+    return b"".join(audio_parts)
 
 
 # ─── Telegram ─────────────────────────────────────────────────────────────────
