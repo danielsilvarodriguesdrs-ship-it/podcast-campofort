@@ -2,73 +2,54 @@ name: Boletim CampoFort Semanal
 
 on:
   schedule:
-    # Toda quarta-feira às 07:00 horário de Brasília (UTC-3 = 10:00 UTC)
-    - cron: '0 10 * * 3'
-
-  # Permite rodar manualmente pelo GitHub: Actions → Run workflow
+    # Toda quarta-feira às 06:00 BRT = 09:00 UTC
+    - cron: '0 9 * * 3'
   workflow_dispatch:
+    # Permite rodar manualmente pelo GitHub (útil para testar)
 
 jobs:
-  gerar-boletim:
+  boletim:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     permissions:
-      contents: write   # Para commitar RSS + fazer upload no Releases
+      contents: write
 
     steps:
-      # 1. Checkout do repositório
-      - name: Checkout repositório
+      - name: Checkout do repositório
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      # 2. Python 3.11
       - name: Configurar Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
-          cache-dependency-path: 'requirements_cloud.txt'
 
-      # 3. Instalar dependências
       - name: Instalar dependências
         run: |
           pip install --upgrade pip
-          pip install -r requirements_cloud.txt
+          pip install anthropic openai requests
 
-      # 4. Rodar pipeline (gera boletim, áudio, RSS, envia Telegram)
-      - name: Executar pipeline CampoFort
+      - name: Executar Boletim Runner
         env:
           ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY:     ${{ secrets.OPENAI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
-          GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO:        ${{ github.repository }}
-          SPOTIFY_URL:        ${{ secrets.SPOTIFY_URL }}
-          OPENAI_API_KEY:     ${{ secrets.OPENAI_API_KEY }}
-        run: python pipeline_cloud.py
+        run: python scripts/boletim_runner.py
 
-      # 5. Commitar arquivos gerados de volta ao repositório
-      #    (boletim, roteiro, mensagem Telegram, RSS, episodios.json)
       - name: Commitar arquivos gerados
         run: |
           git config user.name  "CampoFort Bot"
           git config user.email "bot@campofort.com.br"
-          git add \
-            boletim_semanal_campofort_*.md \
-            roteiro_podcast_campofort_*.md \
-            mensagem_telegram_*.txt \
-            docs/podcast_feed.xml \
-            episodios.json \
-            || true
+          git add output/ || true
           git diff --staged --quiet || \
-            git commit -m "🌾 Boletim CampoFort — $(date +'%d/%m/%Y')"
+            git commit -m "🌾 Boletim CampoFort — $(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"
           git push || true
 
-      # 6. Upload do MP3 como artefato da Action (disponível por 7 dias)
-      - name: Salvar MP3 como artefato
+      - name: Salvar arquivos como artefato
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: podcast-campofort-${{ github.run_id }}
-          path: podcast_campofort_*.mp3
-          retention-days: 7
+          name: boletim-${{ github.run_id }}
+          path: output/
+          retention-days: 90
           if-no-files-found: warn
