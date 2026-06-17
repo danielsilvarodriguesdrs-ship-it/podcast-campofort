@@ -48,10 +48,11 @@ REGRAS ABSOLUTAS (sem exceção):
 2. NÃO mencionar SELIC em nenhum trecho
 3. Foco geográfico: boi gordo, milho e soja para GOIÁS e MATO GROSSO lado a lado
 4. Fonte política obrigatória: Revista Oeste (revistaoeste.com) — 1 fato político da semana
-5. Cotações atualizadas — use TODAS as buscas abaixo antes de escrever
+5. Use os dados mais recentes encontrados nas pesquisas — se não houver dados de hoje, use os de ontem ou dos últimos 3 dias, indicando a data de referência. NUNCA pergunte ao usuário nem peça confirmação. SEMPRE gere o boletim completo com os melhores dados disponíveis.
 6. Linguagem profissional, direta, dinâmica — voltada ao produtor rural de GO e MT
 7. Separadores ━━━━━━━━━━━━━━━━━━━━, marcadores ▸, emojis nos cabeçalhos
 8. Roteiro: todos os números por extenso em português (sem R$, %, /, @, sc, bu — escreva "reais", "por cento", etc.)
+9. O roteiro do podcast DEVE ter entre 600 e 900 palavras — equivalente a 4 a 5 minutos de narração. Desenvolva cada bloco com análise, contexto e orientação prática para o produtor.
 
 ══════════════════════════════════════
 PESQUISAS OBRIGATÓRIAS — faça ANTES de escrever:
