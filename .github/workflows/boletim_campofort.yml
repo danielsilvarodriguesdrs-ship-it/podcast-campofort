@@ -2,10 +2,21 @@ name: Boletim CampoFort Semanal
 
 on:
   schedule:
-    # Toda quarta-feira às 06:00 BRT = 09:00 UTC
+    # TERÇA-FEIRA 18:00 BRT = 21:00 UTC — gera conteúdo, áudio e RSS (Spotify processa à noite)
+    - cron: '0 21 * * 2'
+    # QUARTA-FEIRA 06:00 BRT = 09:00 UTC — envia Telegram com link Spotify já publicado
     - cron: '0 9 * * 3'
   workflow_dispatch:
-    # Permite rodar manualmente pelo GitHub (útil para testar)
+    inputs:
+      mode:
+        description: 'Modo: full (gera+envia), generate (só gera), publish (só envia)'
+        required: false
+        default: 'full'
+        type: choice
+        options:
+          - full
+          - generate
+          - publish
 
 jobs:
   boletim:
@@ -30,6 +41,18 @@ jobs:
           pip install --upgrade pip
           pip install anthropic openai requests
 
+      - name: Definir modo de execução
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "MODE=${{ github.event.inputs.mode }}" >> $GITHUB_ENV
+          elif [[ "${{ github.event.schedule }}" == "0 21 * * 2" ]]; then
+            echo "MODE=generate" >> $GITHUB_ENV
+          elif [[ "${{ github.event.schedule }}" == "0 9 * * 3" ]]; then
+            echo "MODE=publish" >> $GITHUB_ENV
+          else
+            echo "MODE=full" >> $GITHUB_ENV
+          fi
+
       - name: Executar Boletim Runner
         env:
           ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
@@ -37,26 +60,4 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
           GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO:        ${{ github.repository }}
-        run: python scripts/boletim_runner.py
-
-      - name: Commitar RSS feed e arquivos gerados
-        run: |
-          git config user.name  "CampoFort Bot"
-          git config user.email "bot@campofort.com.br"
-          git add output/ podcast_feed.xml docs/podcast_feed.xml episodes.json || true
-          git diff --staged --quiet || \
-            git commit -m "🌾 Boletim CampoFort — $(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"
-          git push || true
-
-      - name: Salvar arquivos como artefato
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: boletim-${{ github.run_id }}
-          path: |
-            output/
-            podcast_feed.xml
-            episodes.json
-          retention-days: 90
-          if-no-files-found: warn
+          GITHUB_REPO:        

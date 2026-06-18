@@ -18,6 +18,10 @@ ANTHROPIC_API_KEY  = os.environ["ANTHROPIC_API_KEY"]
 OPENAI_API_KEY     = os.environ["OPENAI_API_KEY"]
 GITHUB_TOKEN       = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO        = os.environ.get("GITHUB_REPO", "danielsilvarodriguesdrs-ship-it/podcast-campofort")
+# generate = terça (gera tudo, salva pending, não envia Telegram)
+# publish  = quarta (lê pending, envia Telegram com link Spotify)
+# full     = manual (gera + envia imediatamente)
+MODE = os.environ.get("MODE", "full")
 
 # Fuso horário BRT (UTC-3)
 BRT = datetime.timezone(datetime.timedelta(hours=-3))
@@ -390,36 +394,25 @@ def save_files(telegram_msg: str, roteiro: str, audio_bytes: bytes) -> None:
 
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
+SPOTIFY_SHOW_URL  = "https://open.spotify.com/show/033s9dJplOa8SpCMY7EXnd"
+PENDING_FILE      = Path("output/boletim_pending.txt")
+
+
 def main() -> None:
-    print(f"\n🌾 CampoFort Boletim Runner — {DATE_SHORT} ({DIA_SEMANA})\n{'─' * 50}")
+    print(f"\n🌾 CampoFort Boletim Runner — {DATE_SHORT} ({DIA_SEMANA}) — modo: {MODE}\n{'─' * 50}")
 
+    # ── MODO PUBLISH: apenas envia Telegram com o boletim salvo na terça ──────
+    if MODE == "publish":
+        if not PENDING_FILE.exists():
+            print("⚠️  Nenhum boletim pendente encontrado em output/boletim_pending.txt")
+            return
+        telegram_msg = PENDING_FILE.read_text(encoding="utf-8")
+        print("\n📱 Enviando boletim salvo via Telegram...")
+        telegram_send_text(telegram_msg, spotify_url=SPOTIFY_SHOW_URL)
+        PENDING_FILE.unlink(missing_ok=True)
+        print(f"\n🏁 Boletim publicado com sucesso — {DATE_SHORT}")
+        return
+
+    # ── MODO GENERATE ou FULL: gera conteúdo, áudio e RSS ────────────────────
     telegram_msg, roteiro = generate_content()
-    audio_bytes = generate_audio(roteiro)
-    filename = f"podcast_campofort_{DATE_FILE}.mp3"
-    save_files(telegram_msg, roteiro, audio_bytes)
-
-    # Spotify RSS — hospedar MP3 no GitHub Releases e atualizar feed
-    audio_url = None
-    if GITHUB_TOKEN:
-        print("\n🎵 Publicando no Spotify RSS via GitHub Releases...")
-        try:
-            audio_url = github_upload_release(audio_bytes, filename)
-            update_rss_feed(audio_url, telegram_msg)
-        except Exception as e:
-            print(f"  ⚠️  RSS/Release falhou (não crítico): {e}")
-    else:
-        print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
-
-    SPOTIFY_SHOW_URL = "https://open.spotify.com/show/033s9dJplOa8SpCMY7EXnd"
-
-    print("\n📱 Enviando via Telegram...")
-    telegram_send_text(telegram_msg, spotify_url=SPOTIFY_SHOW_URL)
-    # Áudio publicado no Spotify via RSS — não enviamos MP3 separado no Telegram
-
-    print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
-    if audio_url:
-        print(f"🎵 MP3 público: {audio_url}")
-
-
-if __name__ == "__main__":
-    main()
+    audio_
