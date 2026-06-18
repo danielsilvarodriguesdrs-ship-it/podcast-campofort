@@ -198,17 +198,25 @@ def generate_audio(roteiro: str) -> bytes:
 
 
 # ─── Telegram ─────────────────────────────────────────────────────────────────
-def telegram_send_text(text: str) -> None:
-    """Envia mensagem de texto (divide em partes se necessário)."""
-    url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+def telegram_send_text(text: str, spotify_url: str = None) -> None:
+    """Envia mensagem de texto. Na última parte, adiciona botão inline do Spotify."""
+    api_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+    chunks = [text[j:j + 4000] for j in range(0, len(text), 4000)]
 
-    # Telegram: limite de 4096 caracteres por mensagem
-    for i, chunk in enumerate([text[j:j + 4000] for j in range(0, len(text), 4000)]):
-        resp = requests.post(url, json={
+    for i, chunk in enumerate(chunks):
+        payload = {
             "chat_id": TELEGRAM_CHAT_ID,
             "text": chunk,
             "parse_mode": "Markdown"
-        }, timeout=30)
+        }
+        # Botão inline apenas na última parte
+        if spotify_url and i == len(chunks) - 1:
+            payload["reply_markup"] = {
+                "inline_keyboard": [[
+                    {"text": "🎙️ Ouça o Podcast no Spotify", "url": spotify_url}
+                ]]
+            }
+        resp = requests.post(api_url, json=payload, timeout=30)
         resp.raise_for_status()
         print(f"  ✅ Texto enviado (parte {i + 1})")
 
@@ -396,16 +404,10 @@ def main() -> None:
     else:
         print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
 
-    # Adiciona link do Spotify ao final da mensagem — URL pura, sempre clicável
     SPOTIFY_SHOW_URL = "https://open.spotify.com/show/033s9dJplOa8SpCMY7EXnd"
-    telegram_msg = (
-        telegram_msg
-        + f"\n━━━━━━━━━━━━━━━━━━━━\n"
-        + f"🎙️ Ouça no Spotify:\n{SPOTIFY_SHOW_URL}"
-    )
 
     print("\n📱 Enviando via Telegram...")
-    telegram_send_text(telegram_msg)
+    telegram_send_text(telegram_msg, spotify_url=SPOTIFY_SHOW_URL)
     telegram_send_audio(audio_bytes, filename)
 
     print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
