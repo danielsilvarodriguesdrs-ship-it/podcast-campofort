@@ -192,17 +192,29 @@ def generate_content() -> tuple[str, str]:
 
 
 # ─── Geração de áudio (OpenAI TTS) ───────────────────────────────────────────
-def _split_text(text: str, max_chars: int = 4000) -> list[str]:
-    """Divide o texto em blocos ≤ max_chars, quebrando em fim de frase."""
+def _split_text(text: str, max_chars: int = 3800) -> list[str]:
+    """Divide o texto em blocos ≤ max_chars, quebrando em fim de frase.
+    Garante que nenhum bloco exceda max_chars, mesmo sentenças muito longas."""
     chunks, current = [], ""
     for sentence in text.replace("\n", " \n ").split(". "):
-        candidate = current + sentence + ". "
+        piece = sentence + ". "
+        # Sentença individualmente maior que max_chars: divide por força bruta
+        if len(piece) > max_chars:
+            if current:
+                chunks.append(current.strip())
+                current = ""
+            for i in range(0, len(piece), max_chars):
+                sub = piece[i:i + max_chars].strip()
+                if sub:
+                    chunks.append(sub)
+            continue
+        candidate = current + piece
         if len(candidate) <= max_chars:
             current = candidate
         else:
             if current:
                 chunks.append(current.strip())
-            current = sentence + ". "
+            current = piece
     if current.strip():
         chunks.append(current.strip())
     return chunks or [text[:max_chars]]
