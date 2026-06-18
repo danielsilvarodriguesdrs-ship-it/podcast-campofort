@@ -396,16 +396,16 @@ def main() -> None:
     else:
         print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
 
-    # Telegram — link do Spotify sempre presente
+    # Adiciona link do Spotify ao final da mensagem — URL pura, sempre clicável
     SPOTIFY_SHOW_URL = "https://open.spotify.com/show/033s9dJplOa8SpCMY7EXnd"
-    spotify_note = (
-        f"\n━━━━━━━━━━━━━━━━━━━━\n"
-        f"🎙️ *PODCAST*\n\n"
-        f"▸ [Ouça agora no Spotify]({SPOTIFY_SHOW_URL})"
+    telegram_msg = (
+        telegram_msg
+        + f"\n━━━━━━━━━━━━━━━━━━━━\n"
+        + f"🎙️ Ouça no Spotify:\n{SPOTIFY_SHOW_URL}"
     )
 
     print("\n📱 Enviando via Telegram...")
-    telegram_send_text(telegram_msg + spotify_note)
+    telegram_send_text(telegram_msg)
     telegram_send_audio(audio_bytes, filename)
 
     print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
