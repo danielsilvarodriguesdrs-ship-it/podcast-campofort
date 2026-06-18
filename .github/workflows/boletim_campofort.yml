@@ -44,7 +44,7 @@ jobs:
         run: |
           git config user.name  "CampoFort Bot"
           git config user.email "bot@campofort.com.br"
-          git add output/ podcast_feed.xml episodes.json || true
+          git add output/ podcast_feed.xml docs/podcast_feed.xml episodes.json || true
           git diff --staged --quiet || \
             git commit -m "🌾 Boletim CampoFort — $(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"
           git push || true

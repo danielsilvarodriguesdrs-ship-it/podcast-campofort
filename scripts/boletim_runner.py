@@ -353,14 +353,18 @@ def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
     <copyright>CampoFort Nutrição Estratégica</copyright>
     <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
     <itunes:author>Daniel Rodrigues — CampoFort Nutrição Estratégica</itunes:author>
+    <itunes:owner>
+      <itunes:name>Daniel Rodrigues</itunes:name>
+      <itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email>
+    </itunes:owner>
     <itunes:summary>Boletim semanal com cotações e análises de boi gordo, milho e soja para GO e MT.</itunes:summary>
     <itunes:category text="Business">
       <itunes:category text="Investing"/>
     </itunes:category>
     <itunes:explicit>false</itunes:explicit>
-    <itunes:image href="{pages_base}/cover.jpg"/>
+    <itunes:image href="{pages_base}/capa_campofort.jpg"/>
     <image>
-      <url>{pages_base}/cover.jpg</url>
+      <url>{pages_base}/capa_campofort.jpg</url>
       <title>CampoFort — Boletim Agropecuário</title>
       <link>{pages_base}</link>
     </image>
@@ -368,8 +372,10 @@ def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
   </channel>
 </rss>"""
 
+    # Escreve na raiz E em docs/ (GitHub Pages serve de docs/)
     Path("podcast_feed.xml").write_text(rss_xml, encoding="utf-8")
-    print(f"  ✅ RSS feed atualizado: {len(episodes)} episódio(s) → podcast_feed.xml")
+    Path("docs/podcast_feed.xml").write_text(rss_xml, encoding="utf-8")
+    print(f"  ✅ RSS feed atualizado: {len(episodes)} episódio(s) → podcast_feed.xml + docs/podcast_feed.xml")
     print(f"  🎵 URL do feed: {pages_base}/podcast_feed.xml")
 
 
@@ -408,7 +414,7 @@ def main() -> None:
 
     print("\n📱 Enviando via Telegram...")
     telegram_send_text(telegram_msg, spotify_url=SPOTIFY_SHOW_URL)
-    telegram_send_audio(audio_bytes, filename)
+    # Áudio publicado no Spotify via RSS — não enviamos MP3 separado no Telegram
 
     print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
     if audio_url:

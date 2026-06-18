@@ -3,39 +3,38 @@
   xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Boletim CampoFort</title>
-    <link>https://campofort.com.br</link>
-    <description>Boletim semanal de mercado agropecuario - Goias e Mato Grosso. Boi gordo, milho e soja. Apresentacao: Daniel Rodrigues, CEO CampoFort.</description>
+    <title>CampoFort — Boletim Agropecuário</title>
+    <link>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort</link>
+    <description>Boletim semanal com cotações de boi gordo, milho e soja para produtores de Goiás e Mato Grosso. Por Daniel Rodrigues — CampoFort Nutrição Estratégica.</description>
     <language>pt-BR</language>
-    <lastBuildDate>Wed, 03 Jun 2026 10:00:00 -0300</lastBuildDate>
+    <copyright>CampoFort Nutrição Estratégica</copyright>
     <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
-    <itunes:author>Daniel Rodrigues</itunes:author>
+    <itunes:author>Daniel Rodrigues — CampoFort Nutrição Estratégica</itunes:author>
     <itunes:owner>
       <itunes:name>Daniel Rodrigues</itunes:name>
       <itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email>
     </itunes:owner>
-    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg"/>
+    <itunes:summary>Boletim semanal com cotações e análises de boi gordo, milho e soja para GO e MT.</itunes:summary>
     <itunes:category text="Business">
-      <itunes:category text="Agriculture"/>
+      <itunes:category text="Investing"/>
     </itunes:category>
     <itunes:explicit>false</itunes:explicit>
+    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg"/>
+    <image>
+      <url>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg</url>
+      <title>CampoFort — Boletim Agropecuário</title>
+      <link>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort</link>
+    </image>
+
     <item>
-      <title>Boletim CampoFort - 03/06/2026</title>
-      <description>Boi gordo GO R$ 332,86/@ e MT R$ 353,24/@. Milho GO R$ 55,42/sc; MT R$ 45,90/sc. Soja Sul Goiano R$ 111,09/sc. Politica: CNA pede R$ 623 bi para Plano Safra 2026/27.</description>
-      <pubDate>Wed, 03 Jun 2026 10:00:00 -0300</pubDate>
-      <guid isPermaLink="false">campofort-20260603</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" length="1459440" type="audio/mpeg"/>
-      <itunes:duration>240</itunes:duration>
-      <itunes:author>Daniel Rodrigues</itunes:author>
+      <title><![CDATA[Boletim CampoFort — 17/06/2026]]></title>
+      <description><![CDATA[Boletim semanal com cotações de boi gordo, milho e soja para Goiás e Mato Grosso. Por Daniel Rodrigues — CampoFort Nutrição Estratégica.]]></description>
+      <pubDate>Wed, 17 Jun 2026 06:00:00 -0300</pubDate>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260617/podcast_campofort_20260617.mp3" type="audio/mpeg"/>
+      <guid isPermaLink="false">https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260617/podcast_campofort_20260617.mp3</guid>
+      <itunes:duration>300</itunes:duration>
+      <itunes:explicit>false</itunes:explicit>
     </item>
+
     <item>
-      <title>Boletim CampoFort - 12/05/2026</title>
-      <description>Boi gordo GO R$ 334/@, MT R$ 353,75/@. Alerta de esgotamento da cota chinesa. Milho com estresse hidrico em GO. Soja firme.</description>
-      <pubDate>Tue, 12 May 2026 06:00:00 -0300</pubDate>
-      <guid isPermaLink="false">campofort-20260512</guid>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260512.mp3" length="1806048" type="audio/mpeg"/>
-      <itunes:duration>270</itunes:duration>
-      <itunes:author>Daniel Rodrigues</itunes:author>
-    </item>
-  </channel>
-</rss>
+      <title><![CDATA[Boletim 
