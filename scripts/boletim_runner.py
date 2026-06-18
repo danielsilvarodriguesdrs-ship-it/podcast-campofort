@@ -39,104 +39,60 @@ DIA_SEMANA = DIAS_SEMANA[NOW.weekday()]
 MES_ANO = f"{MESES[NOW.month - 1]} de {NOW.year}"
 
 # ─── Prompt de geração ─────────────────────────────────────────────────────────
-PROMPT = f"""
-Você é o assistente de Daniel Rodrigues, representante técnico-comercial da CampoFort Nutrição Estratégica
-e da Cria Bem Nutrição Animal. Gere o BOLETIM SEMANAL CAMPOFORT para {DATE_SHORT} ({DIA_SEMANA}).
+PROMPT = f"""Gere o BOLETIM SEMANAL CAMPOFORT — {DATE_SHORT} ({DIA_SEMANA}).
+Você representa Daniel Rodrigues, CampoFort Nutrição Estratégica / Cria Bem Nutrição Animal.
 
-══════════════════════════════════════
-REGRAS GERAIS (valem para AMBOS os blocos):
-══════════════════════════════════════
-1. Todo texto em Português Brasileiro correto — sem anglicismos, sem palavras em inglês ou espanhol
-2. NÃO mencionar SELIC em nenhum trecho
-3. Foco geográfico: boi gordo, milho e soja para GOIÁS e MATO GROSSO lado a lado
-4. Fonte política obrigatória: Revista Oeste (revistaoeste.com) — 1 fato político da semana
-5. Use os dados mais recentes encontrados nas pesquisas. Se não houver dados de hoje, use os de ontem ou dos últimos 3 dias, indicando a data de referência. NUNCA pergunte ao usuário. SEMPRE gere o boletim completo.
-6. Linguagem profissional, direta, dinâmica — voltada ao produtor rural de GO e MT
+REGRAS:
+- Português brasileiro. Sem SELIC. GO e MT lado a lado em cada commodity.
+- TELEGRAM: valores em notação numérica — R$ 327,00/@, +1,2%, US$ 4,27/bu. NUNCA por extenso.
+- ROTEIRO: valores POR EXTENSO — "trezentos e vinte e sete reais por arroba", "alta de um vírgula dois por cento".
+- Dados mais recentes disponíveis (até 3 dias). NUNCA pergunte. SEMPRE gere o boletim completo.
 
-══════════════════════════════════════
-REGRA CRÍTICA DE FORMATAÇÃO DE NÚMEROS:
-══════════════════════════════════════
-⚠️  BLOCO 1 (Telegram): use SEMPRE notação numérica com símbolos
-    • Preços: R$ 327,00/@ — R$ 58,50/sc — US$ 4,27/bu
-    • Variações: +1,2% ou -0,8%
-    • NUNCA escreva valores por extenso no Telegram
-
-⚠️  BLOCO 2 (Roteiro podcast): escreva TODOS os números por extenso para narração
-    • R$ 327,00/@ → "trezentos e vinte e sete reais por arroba"
-    • +1,2% → "alta de um vírgula dois por cento"
-    • US$ 4,27/bu → "quatro dólares e vinte e sete centavos por bushel"
-
-══════════════════════════════════════
-PESQUISAS OBRIGATÓRIAS — faça ANTES de escrever:
-══════════════════════════════════════
-1. boi gordo Goiás cotação arroba {MES_ANO}
-2. boi gordo Mato Grosso IMEA preço semana atual
-3. B3 boi gordo contrato futuro hoje {DATE_SHORT}
-4. milho Rio Verde Goiás saca preço hoje
-5. milho Mato Grosso IMEA disponível semana
-6. B3 milho contratos futuros hoje
-7. soja Sul Goiano cotação saca semana
-8. soja Mato Grosso IMEA preço semana
-9. Chicago soja milho fechamento hoje
-10. dólar real cotação hoje
-11. site:revistaoeste.com agronegócio política semana
-12. exportação carne bovina Brasil China veto UE {MES_ANO}
-13. Plano Safra crédito rural agronegócio novidade {MES_ANO}
-
-══════════════════════════════════════
-BLOCO 1 — MENSAGEM TELEGRAM
-Entre ===TELEGRAM_INICIO=== e ===TELEGRAM_FIM===
-Todos os valores em NOTAÇÃO NUMÉRICA (R$, %, @, sc, bu)
-══════════════════════════════════════
+PESQUISAS — faça as 5 antes de escrever:
+1. boi gordo Goiás Mato Grosso cotação arroba semana atual {MES_ANO}
+2. milho soja Goiás Mato Grosso IMEA CEPEA preço hoje {DATE_SHORT}
+3. B3 boi gordo milho soja futuros fechamento {DATE_SHORT}
+4. dólar cotação hoje exportação carne bovina Brasil China {MES_ANO}
+5. site:revistaoeste.com política agronegócio {MES_ANO}
 
 ===TELEGRAM_INICIO===
 📊 *BOLETIM CAMPOFORT* — {DATE_SHORT}
 _{DIA_SEMANA.capitalize()} | Mercado Agropecuário_
 
-Bom dia, produtor! 👋
+Bom dia, produtor!
 
 ━━━━━━━━━━━━━━━━━━━━
 🐂 *BOI GORDO*
-
-▸ *GO* R$ XXX,XX/@ (à vista) · R$ XXX,XX/@ (prazo 30d)
-▸ *MT* R$ XXX,XX/@ (Cuiabá) · R$ XXX,XX/@ (Sudeste MT)
-▸ *B3* [mês/ano] R$ XXX,XX/@ (X,XX%) · [mês/ano] R$ XXX,XX/@ (X,XX%)
-
-💬 _[1 linha de análise objetiva — oferta, demanda ou tendência]_
+▸ *GO* R$ X,XX/@ (à vista) · R$ X,XX/@ (prazo 30d)
+▸ *MT* R$ X,XX/@ (Cuiabá)
+▸ *B3* [mês] R$ X,XX/@ (X,X%)
+💬 _[análise: oferta, demanda ou tendência — 1 linha]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🌽 *MILHO*
-
-▸ *GO* Rio Verde ~R$ XX,XX/sc · *MT* (IMEA) R$ XX,XX/sc (X,XX%)
-▸ *B3* [mês/ano] R$ XX,XX/sc · *Chicago* US$ X,XX/bu (X,XX%)
-
-💬 _[1 linha de análise — safrinha, demanda, oportunidade/risco]_
+▸ *GO* R$ X,XX/sc · *MT* R$ X,XX/sc (X,X%)
+▸ *B3* R$ X,XX/sc · *Chicago* US$ X,XX/bu (X,X%)
+💬 _[análise: safrinha, demanda, risco — 1 linha]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🌱 *SOJA*
-
-▸ *GO* Sul Goiano R$ XXX,XX/sc · *MT* (IMEA) R$ XXX,XX/sc (X,XX%)
-▸ *Chicago* US$ XX,XX/bu (X,XX%) · *Paranaguá* R$ XXX,XX/sc
-
-💬 _[1 linha de análise — câmbio, exportação, perspectiva]_
+▸ *GO* R$ X,XX/sc · *MT* R$ X,XX/sc (X,X%)
+▸ *Chicago* US$ X,XX/bu (X,X%) · *Paranaguá* R$ X,XX/sc
+💬 _[análise: câmbio, exportação, perspectiva — 1 linha]_
 
 ━━━━━━━━━━━━━━━━━━━━
-💵 *CÂMBIO & MACRO*
-
-▸ Dólar R$ X,XX
-▸ _[impacto direto no agro — competitividade das exportações ou custo de insumos]_
+💵 *CÂMBIO*
+▸ Dólar R$ X,XX · _[impacto no agro — 1 linha]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🏛️ *POLÍTICA* _(Revista Oeste)_
-
-▸ _[fato político mais relevante da semana com leitura direta para o produtor — 2 linhas]_
+▸ _[fato político relevante da semana — 2 linhas]_
 
 ━━━━━━━━━━━━━━━━━━━━
-🔎 *PANORAMA DA SEMANA*
-
-▸ [destaque comercial ou regulatório 1 — frase curta e objetiva com número]
-▸ [destaque 2 — idem]
-▸ [destaque 3 — idem, se relevante]
+🔎 *PANORAMA*
+▸ [destaque 1 com número]
+▸ [destaque 2 com número]
+▸ [destaque 3 se relevante]
 
 ━━━━━━━━━━━━━━━━━━━━
 _Daniel Rodrigues_
@@ -144,22 +100,12 @@ _CampoFort Nutrição Estratégica · Cria Bem Nutrição Animal_
 _Nutrição estratégica. Resultado no campo._
 ===TELEGRAM_FIM===
 
-══════════════════════════════════════
-BLOCO 2 — ROTEIRO DO PODCAST
-Entre ===ROTEIRO_INICIO=== e ===ROTEIRO_FIM===
-Todos os números POR EXTENSO para narração natural em TTS
-600 a 900 palavras — 4 a 5 minutos de narração
-══════════════════════════════════════
-
 ===ROTEIRO_INICIO===
-ABERTURA OBRIGATÓRIA:
 "Bom dia, produtor. Este é o Boletim Informativo CampoFort. Hoje é {DIA_SEMANA}, {DATE_LONG}. Vamos aos mercados."
 
-[Desenvolva cada bloco com análise, contexto e orientação prática.
-Ordem: BOI GORDO → MILHO → SOJA → CÂMBIO → POLÍTICA DA SEMANA → PANORAMA
-Todos os valores POR EXTENSO: R$ 327,00/@ = "trezentos e vinte e sete reais por arroba"]
+[600 a 900 palavras. Ordem: BOI GORDO → MILHO → SOJA → CÂMBIO → POLÍTICA → PANORAMA.
+Análise, contexto e orientação prática para o produtor. Todos os valores POR EXTENSO.]
 
-ENCERRAMENTO OBRIGATÓRIO:
 "Este boletim foi elaborado por Daniel da CampoFort Nutrição Estratégica, representante técnico-comercial da Cria Bem Nutrição Animal. Nutrição estratégica. Resultado no campo. Até a próxima quarta-feira."
 ===ROTEIRO_FIM===
 """
