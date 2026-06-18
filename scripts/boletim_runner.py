@@ -396,11 +396,13 @@ def main() -> None:
     else:
         print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
 
-    # Telegram — adicionar link do podcast se disponível
-    spotify_note = ""
-    if audio_url:
-        pages_base = "https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort"
-        spotify_note = f"\n━━━━━━━━━━━━━━━━━━━━\n🎙️ *PODCAST*\n\n▸ [Ouça agora no Spotify]({pages_base}) _(ou pelo link direto abaixo)_"
+    # Telegram — link do Spotify sempre presente
+    SPOTIFY_SHOW_URL = "https://open.spotify.com/show/033s9dJplOa8SpCMY7EXnd"
+    spotify_note = (
+        f"\n━━━━━━━━━━━━━━━━━━━━\n"
+        f"🎙️ *PODCAST*\n\n"
+        f"▸ [Ouça agora no Spotify]({SPOTIFY_SHOW_URL})"
+    )
 
     print("\n📱 Enviando via Telegram...")
     telegram_send_text(telegram_msg + spotify_note)
