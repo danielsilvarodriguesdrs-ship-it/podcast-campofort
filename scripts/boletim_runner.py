@@ -16,6 +16,8 @@ TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
 ANTHROPIC_API_KEY  = os.environ["ANTHROPIC_API_KEY"]
 OPENAI_API_KEY     = os.environ["OPENAI_API_KEY"]
+GITHUB_TOKEN       = os.environ.get("GITHUB_TOKEN", "")
+GITHUB_REPO        = os.environ.get("GITHUB_REPO", "danielsilvarodriguesdrs-ship-it/podcast-campofort")
 
 # Fuso horário BRT (UTC-3)
 BRT = datetime.timezone(datetime.timedelta(hours=-3))
@@ -42,17 +44,27 @@ Você é o assistente de Daniel Rodrigues, representante técnico-comercial da C
 e da Cria Bem Nutrição Animal. Gere o BOLETIM SEMANAL CAMPOFORT para {DATE_SHORT} ({DIA_SEMANA}).
 
 ══════════════════════════════════════
-REGRAS ABSOLUTAS (sem exceção):
+REGRAS GERAIS (valem para AMBOS os blocos):
 ══════════════════════════════════════
 1. Todo texto em Português Brasileiro correto — sem anglicismos, sem palavras em inglês ou espanhol
 2. NÃO mencionar SELIC em nenhum trecho
 3. Foco geográfico: boi gordo, milho e soja para GOIÁS e MATO GROSSO lado a lado
 4. Fonte política obrigatória: Revista Oeste (revistaoeste.com) — 1 fato político da semana
-5. Use os dados mais recentes encontrados nas pesquisas — se não houver dados de hoje, use os de ontem ou dos últimos 3 dias, indicando a data de referência. NUNCA pergunte ao usuário nem peça confirmação. SEMPRE gere o boletim completo com os melhores dados disponíveis.
+5. Use os dados mais recentes encontrados nas pesquisas. Se não houver dados de hoje, use os de ontem ou dos últimos 3 dias, indicando a data de referência. NUNCA pergunte ao usuário. SEMPRE gere o boletim completo.
 6. Linguagem profissional, direta, dinâmica — voltada ao produtor rural de GO e MT
-7. Separadores ━━━━━━━━━━━━━━━━━━━━, marcadores ▸, emojis nos cabeçalhos
-8. Roteiro: todos os números por extenso em português (sem R$, %, /, @, sc, bu — escreva "reais", "por cento", etc.)
-9. O roteiro do podcast DEVE ter entre 600 e 900 palavras — equivalente a 4 a 5 minutos de narração. Desenvolva cada bloco com análise, contexto e orientação prática para o produtor.
+
+══════════════════════════════════════
+REGRA CRÍTICA DE FORMATAÇÃO DE NÚMEROS:
+══════════════════════════════════════
+⚠️  BLOCO 1 (Telegram): use SEMPRE notação numérica com símbolos
+    • Preços: R$ 327,00/@ — R$ 58,50/sc — US$ 4,27/bu
+    • Variações: +1,2% ou -0,8%
+    • NUNCA escreva valores por extenso no Telegram
+
+⚠️  BLOCO 2 (Roteiro podcast): escreva TODOS os números por extenso para narração
+    • R$ 327,00/@ → "trezentos e vinte e sete reais por arroba"
+    • +1,2% → "alta de um vírgula dois por cento"
+    • US$ 4,27/bu → "quatro dólares e vinte e sete centavos por bushel"
 
 ══════════════════════════════════════
 PESQUISAS OBRIGATÓRIAS — faça ANTES de escrever:
@@ -72,87 +84,83 @@ PESQUISAS OBRIGATÓRIAS — faça ANTES de escrever:
 13. Plano Safra crédito rural agronegócio novidade {MES_ANO}
 
 ══════════════════════════════════════
-SAÍDA ESPERADA — dois blocos separados:
+BLOCO 1 — MENSAGEM TELEGRAM
+Entre ===TELEGRAM_INICIO=== e ===TELEGRAM_FIM===
+Todos os valores em NOTAÇÃO NUMÉRICA (R$, %, @, sc, bu)
 ══════════════════════════════════════
-
-BLOCO 1 — MENSAGEM TELEGRAM (entre ===TELEGRAM_INICIO=== e ===TELEGRAM_FIM===):
 
 ===TELEGRAM_INICIO===
 📊 *BOLETIM CAMPOFORT* — {DATE_SHORT}
 _{DIA_SEMANA.capitalize()} | Mercado Agropecuário_
 
-Bom dia, produtor.
+Bom dia, produtor! 👋
 
 ━━━━━━━━━━━━━━━━━━━━
 🐂 *BOI GORDO*
 
-▸ GO R$ XXX,XX/@ (à vista) | R$ XXX,XX/@ (prazo 30 dias)
-▸ MT R$ XXX,XX/@ (Cuiabá) | R$ XXX,XX/@ (Sudeste)
-▸ B3 [mês próx] R$ XXX,XX/@ (+X,XX%) | [mês seguinte] R$ XXX,XX/@ (+X,XX%)
+▸ *GO* R$ XXX,XX/@ (à vista) · R$ XXX,XX/@ (prazo 30d)
+▸ *MT* R$ XXX,XX/@ (Cuiabá) · R$ XXX,XX/@ (Sudeste MT)
+▸ *B3* [mês/ano] R$ XXX,XX/@ (X,XX%) · [mês/ano] R$ XXX,XX/@ (X,XX%)
 
-[2 linhas de análise — situação de oferta, demanda, perspectiva]
+💬 _[1 linha de análise objetiva — oferta, demanda ou tendência]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🌽 *MILHO*
 
-▸ CEPEA/Esalq R$ XX,XX/sc (+X,XX%)
-▸ GO Rio Verde ~R$ XX,XX/sc | MT (IMEA) R$ XX,XX/sc (-X,XX%)
-▸ B3 [mês] R$ XX,XX/sc | Chicago US$ X,XX/bu (-X,XX%)
+▸ *GO* Rio Verde ~R$ XX,XX/sc · *MT* (IMEA) R$ XX,XX/sc (X,XX%)
+▸ *B3* [mês/ano] R$ XX,XX/sc · *Chicago* US$ X,XX/bu (X,XX%)
 
-[2 linhas de análise — contexto de oferta safrinha, oportunidade ou risco]
+💬 _[1 linha de análise — safrinha, demanda, oportunidade/risco]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🌱 *SOJA*
 
-▸ Paranaguá R$ XXX,XX/sc (+X,XX%) | Paraná R$ XXX,XX/sc
-▸ MT (IMEA) R$ XXX,XX/sc (+X,XX%) | Chicago US$ XX,XX/bu (+X,XX%)
+▸ *GO* Sul Goiano R$ XXX,XX/sc · *MT* (IMEA) R$ XXX,XX/sc (X,XX%)
+▸ *Chicago* US$ XX,XX/bu (X,XX%) · *Paranaguá* R$ XXX,XX/sc
 
-[2 linhas de análise — câmbio, exportação, perspectiva]
+💬 _[1 linha de análise — câmbio, exportação, perspectiva]_
 
 ━━━━━━━━━━━━━━━━━━━━
-💵 *CÂMBIO*
+💵 *CÂMBIO & MACRO*
 
 ▸ Dólar R$ X,XX
-▸ [1 linha de impacto direto no agronegócio]
+▸ _[impacto direto no agro — competitividade das exportações ou custo de insumos]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🏛️ *POLÍTICA* _(Revista Oeste)_
 
-[2 a 3 linhas do fato político mais relevante da semana com leitura direta para o produtor rural]
+▸ _[fato político mais relevante da semana com leitura direta para o produtor — 2 linhas]_
 
 ━━━━━━━━━━━━━━━━━━━━
-🔎 *PANORAMA*
+🔎 *PANORAMA DA SEMANA*
 
-▸ [destaque regulatório ou comercial 1 — frase objetiva]
-▸ [destaque regulatório ou comercial 2]
-▸ [destaque regulatório ou comercial 3 se relevante]
+▸ [destaque comercial ou regulatório 1 — frase curta e objetiva com número]
+▸ [destaque 2 — idem]
+▸ [destaque 3 — idem, se relevante]
 
 ━━━━━━━━━━━━━━━━━━━━
 _Daniel Rodrigues_
-_CampoFort Nutrição Estratégica_
-_Representante técnico-comercial — Cria Bem Nutrição Animal_
+_CampoFort Nutrição Estratégica · Cria Bem Nutrição Animal_
 _Nutrição estratégica. Resultado no campo._
 ===TELEGRAM_FIM===
 
-──────────────────────────────────────
-
-BLOCO 2 — ROTEIRO DO PODCAST (entre ===ROTEIRO_INICIO=== e ===ROTEIRO_FIM===):
+══════════════════════════════════════
+BLOCO 2 — ROTEIRO DO PODCAST
+Entre ===ROTEIRO_INICIO=== e ===ROTEIRO_FIM===
+Todos os números POR EXTENSO para narração natural em TTS
+600 a 900 palavras — 4 a 5 minutos de narração
+══════════════════════════════════════
 
 ===ROTEIRO_INICIO===
-[Roteiro narrável de 4 a 5 minutos. Todos os números, unidades e símbolos escritos POR EXTENSO:
-R$ 330,00 → "trezentos e trinta reais por arroba"
-+0,61% → "alta de zero vírgula sessenta e um por cento"
-US$ 4,14/bu → "quatro dólares e quatorze centavos por bushel"
-Nomes de meses e datas também por extenso.
-
 ABERTURA OBRIGATÓRIA:
 "Bom dia, produtor. Este é o Boletim Informativo CampoFort. Hoje é {DIA_SEMANA}, {DATE_LONG}. Vamos aos mercados."
 
-Blocos: BOI GORDO → MILHO → SOJA → CÂMBIO → POLÍTICA DA SEMANA → PANORAMA
+[Desenvolva cada bloco com análise, contexto e orientação prática.
+Ordem: BOI GORDO → MILHO → SOJA → CÂMBIO → POLÍTICA DA SEMANA → PANORAMA
+Todos os valores POR EXTENSO: R$ 327,00/@ = "trezentos e vinte e sete reais por arroba"]
 
 ENCERRAMENTO OBRIGATÓRIO:
 "Este boletim foi elaborado por Daniel da CampoFort Nutrição Estratégica, representante técnico-comercial da Cria Bem Nutrição Animal. Nutrição estratégica. Resultado no campo. Até a próxima quarta-feira."
-]
 ===ROTEIRO_FIM===
 """
 
@@ -277,6 +285,140 @@ def telegram_send_audio(audio_bytes: bytes, filename: str) -> None:
     print("  ✅ Áudio enviado")
 
 
+# ─── Spotify RSS via GitHub Releases ─────────────────────────────────────────
+def github_upload_release(audio_bytes: bytes, filename: str) -> str:
+    """Cria GitHub Release e faz upload do MP3. Retorna URL pública de download."""
+    import json as _json
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}",
+        "Accept": "application/vnd.github+json",
+        "X-GitHub-Api-Version": "2022-11-28"
+    }
+    tag = f"ep-{DATE_FILE}"
+
+    # Verificar se release já existe (re-run protection)
+    check = requests.get(
+        f"https://api.github.com/repos/{GITHUB_REPO}/releases/tags/{tag}",
+        headers=headers, timeout=15
+    )
+    if check.status_code == 200:
+        release_id = check.json()["id"]
+        print(f"  ♻️  Release {tag} já existe — reutilizando")
+    else:
+        resp = requests.post(
+            f"https://api.github.com/repos/{GITHUB_REPO}/releases",
+            headers=headers,
+            json={
+                "tag_name": tag,
+                "name": f"🎙️ Boletim CampoFort — {DATE_SHORT}",
+                "body": f"Episódio semanal do podcast CampoFort — {DATE_LONG}.",
+                "draft": False,
+                "prerelease": False
+            },
+            timeout=30
+        )
+        resp.raise_for_status()
+        release_id = resp.json()["id"]
+        print(f"  🏷️  Release {tag} criada (id {release_id})")
+
+    # Upload do MP3
+    upload_resp = requests.post(
+        f"https://uploads.github.com/repos/{GITHUB_REPO}/releases/{release_id}/assets?name={filename}",
+        headers={**headers, "Content-Type": "audio/mpeg"},
+        data=audio_bytes,
+        timeout=300
+    )
+    if upload_resp.status_code == 422:
+        # Asset já existe — buscar URL existente
+        assets = requests.get(
+            f"https://api.github.com/repos/{GITHUB_REPO}/releases/{release_id}/assets",
+            headers=headers, timeout=15
+        ).json()
+        for a in assets:
+            if a["name"] == filename:
+                url = a["browser_download_url"]
+                print(f"  ♻️  Asset já existia: {url}")
+                return url
+    upload_resp.raise_for_status()
+    url = upload_resp.json()["browser_download_url"]
+    print(f"  ✅ MP3 publicado: {url}")
+    return url
+
+
+def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
+    """Atualiza episodes.json e regenera podcast_feed.xml para o Spotify."""
+    import json as _json
+
+    episodes_path = Path("episodes.json")
+    episodes = _json.loads(episodes_path.read_text(encoding="utf-8")) if episodes_path.exists() else []
+
+    # Descrição: primeira linha não-vazia do boletim
+    desc_lines = [l.strip() for l in telegram_msg.split("\n") if l.strip() and not l.startswith("===")]
+    descricao = " ".join(desc_lines[:3])[:300]
+
+    episode = {
+        "titulo": f"Boletim CampoFort — {DATE_SHORT}",
+        "data": NOW.strftime("%Y-%m-%d"),
+        "pubDate": NOW.strftime("%a, %d %b %Y 06:00:00 -0300"),
+        "descricao": descricao,
+        "audio_url": audio_url,
+        "guid": audio_url
+    }
+
+    # Evitar duplicatas por data
+    episodes = [e for e in episodes if e.get("data") != episode["data"]]
+    episodes.insert(0, episode)
+    episodes = episodes[:52]  # Manter 1 ano de episódios
+
+    episodes_path.write_text(_json.dumps(episodes, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Gerar itens RSS
+    items_xml = ""
+    for ep in episodes:
+        items_xml += f"""
+    <item>
+      <title><![CDATA[{ep['titulo']}]]></title>
+      <description><![CDATA[{ep['descricao']}]]></description>
+      <pubDate>{ep['pubDate']}</pubDate>
+      <enclosure url="{ep['audio_url']}" type="audio/mpeg"/>
+      <guid isPermaLink="false">{ep['guid']}</guid>
+      <itunes:duration>300</itunes:duration>
+      <itunes:explicit>false</itunes:explicit>
+    </item>"""
+
+    pages_base = f"https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort"
+    rss_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0"
+  xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
+  xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CampoFort — Boletim Agropecuário</title>
+    <link>{pages_base}</link>
+    <description>Boletim semanal com cotações de boi gordo, milho e soja para produtores de Goiás e Mato Grosso. Por Daniel Rodrigues — CampoFort Nutrição Estratégica.</description>
+    <language>pt-BR</language>
+    <copyright>CampoFort Nutrição Estratégica</copyright>
+    <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
+    <itunes:author>Daniel Rodrigues — CampoFort Nutrição Estratégica</itunes:author>
+    <itunes:summary>Boletim semanal com cotações e análises de boi gordo, milho e soja para GO e MT.</itunes:summary>
+    <itunes:category text="Business">
+      <itunes:category text="Investing"/>
+    </itunes:category>
+    <itunes:explicit>false</itunes:explicit>
+    <itunes:image href="{pages_base}/cover.jpg"/>
+    <image>
+      <url>{pages_base}/cover.jpg</url>
+      <title>CampoFort — Boletim Agropecuário</title>
+      <link>{pages_base}</link>
+    </image>
+    {items_xml}
+  </channel>
+</rss>"""
+
+    Path("podcast_feed.xml").write_text(rss_xml, encoding="utf-8")
+    print(f"  ✅ RSS feed atualizado: {len(episodes)} episódio(s) → podcast_feed.xml")
+    print(f"  🎵 URL do feed: {pages_base}/podcast_feed.xml")
+
+
 # ─── Salvar arquivos locais ────────────────────────────────────────────────────
 def save_files(telegram_msg: str, roteiro: str, audio_bytes: bytes) -> None:
     out = Path("output")
@@ -293,13 +435,34 @@ def main() -> None:
 
     telegram_msg, roteiro = generate_content()
     audio_bytes = generate_audio(roteiro)
+    filename = f"podcast_campofort_{DATE_FILE}.mp3"
     save_files(telegram_msg, roteiro, audio_bytes)
 
+    # Spotify RSS — hospedar MP3 no GitHub Releases e atualizar feed
+    audio_url = None
+    if GITHUB_TOKEN:
+        print("\n🎵 Publicando no Spotify RSS via GitHub Releases...")
+        try:
+            audio_url = github_upload_release(audio_bytes, filename)
+            update_rss_feed(audio_url, telegram_msg)
+        except Exception as e:
+            print(f"  ⚠️  RSS/Release falhou (não crítico): {e}")
+    else:
+        print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
+
+    # Telegram — adicionar link do podcast se disponível
+    spotify_note = ""
+    if audio_url:
+        pages_base = "https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort"
+        spotify_note = f"\n━━━━━━━━━━━━━━━━━━━━\n🎙️ *PODCAST*\n\n▸ [Ouça agora no Spotify]({pages_base}) _(ou pelo link direto abaixo)_"
+
     print("\n📱 Enviando via Telegram...")
-    telegram_send_text(telegram_msg)
-    telegram_send_audio(audio_bytes, f"podcast_campofort_{DATE_FILE}.mp3")
+    telegram_send_text(telegram_msg + spotify_note)
+    telegram_send_audio(audio_bytes, filename)
 
     print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
+    if audio_url:
+        print(f"🎵 MP3 público: {audio_url}")
 
 
 if __name__ == "__main__":

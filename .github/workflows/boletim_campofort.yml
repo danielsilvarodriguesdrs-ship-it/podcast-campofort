@@ -13,6 +13,8 @@ jobs:
     timeout-minutes: 30
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - name: Checkout do repositório
@@ -34,13 +36,15 @@ jobs:
           OPENAI_API_KEY:     ${{ secrets.OPENAI_API_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
+          GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO:        ${{ github.repository }}
         run: python scripts/boletim_runner.py
 
-      - name: Commitar arquivos gerados
+      - name: Commitar RSS feed e arquivos gerados
         run: |
           git config user.name  "CampoFort Bot"
           git config user.email "bot@campofort.com.br"
-          git add output/ || true
+          git add output/ podcast_feed.xml episodes.json || true
           git diff --staged --quiet || \
             git commit -m "🌾 Boletim CampoFort — $(TZ='America/Sao_Paulo' date +'%d/%m/%Y')"
           git push || true
@@ -50,6 +54,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: boletim-${{ github.run_id }}
-          path: output/
+          path: |
+            output/
+            podcast_feed.xml
+            episodes.json
           retention-days: 90
           if-no-files-found: warn
