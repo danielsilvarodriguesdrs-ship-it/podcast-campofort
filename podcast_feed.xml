@@ -3,33 +3,58 @@
   xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd"
   xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>CampoFort — Boletim Agropecuário</title>
+    <title>CampoFort - Boletim Agropecuario</title>
     <link>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort</link>
-    <description>Boletim semanal com cotações de boi gordo, milho e soja para produtores de Goiás e Mato Grosso. Por Daniel Rodrigues — CampoFort Nutrição Estratégica.</description>
+    <description>Boletim semanal com cotacoes de boi gordo, milho e soja para produtores de Goias e Mato Grosso. Por Daniel Rodrigues - CampoFort Nutricao Estrategica.</description>
     <language>pt-BR</language>
-    <copyright>CampoFort Nutrição Estratégica</copyright>
+    <copyright>CampoFort Nutricao Estrategica</copyright>
     <managingEditor>danielsilva.rodrigues.drs@gmail.com (Daniel Rodrigues)</managingEditor>
-    <itunes:author>Daniel Rodrigues — CampoFort Nutrição Estratégica</itunes:author>
-    <itunes:summary>Boletim semanal com cotações e análises de boi gordo, milho e soja para GO e MT.</itunes:summary>
+    <itunes:author>Daniel Rodrigues - CampoFort Nutricao Estrategica</itunes:author>
+    <itunes:owner>
+      <itunes:name>Daniel Rodrigues</itunes:name>
+      <itunes:email>danielsilva.rodrigues.drs@gmail.com</itunes:email>
+    </itunes:owner>
+    <itunes:summary>Boletim semanal com cotacoes e analises de boi gordo, milho e soja para GO e MT.</itunes:summary>
     <itunes:category text="Business">
       <itunes:category text="Investing"/>
     </itunes:category>
     <itunes:explicit>false</itunes:explicit>
-    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/cover.jpg"/>
+    <itunes:image href="https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg"/>
     <image>
-      <url>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/cover.jpg</url>
-      <title>CampoFort — Boletim Agropecuário</title>
+      <url>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort/capa_campofort.jpg</url>
+      <title>CampoFort - Boletim Agropecuario</title>
       <link>https://danielsilvarodriguesdrs-ship-it.github.io/podcast-campofort</link>
     </image>
-    
+
     <item>
-      <title><![CDATA[Boletim CampoFort — 17/06/2026]]></title>
-      <description><![CDATA[📊 *BOLETIM CAMPOFORT* — 17/06/2026 _Quarta-feira | Mercado Agropecuário_ Bom dia, produtor!]]></description>
-      <pubDate>Wed, 17 Jun 2026 06:00:00 -0300</pubDate>
-      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260617/podcast_campofort_20260617.mp3" type="audio/mpeg"/>
-      <guid isPermaLink="false">https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260617/podcast_campofort_20260617.mp3</guid>
+      <title><![CDATA[Boletim CampoFort - 18/06/2026]]></title>
+      <description><![CDATA[Boletim semanal com cotacoes de boi gordo, milho e soja para Goias e Mato Grosso. Por Daniel Rodrigues - CampoFort Nutricao Estrategica.]]></description>
+      <pubDate>Wed, 18 Jun 2026 06:00:00 -0300</pubDate>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260618/podcast_campofort_20260618.mp3" type="audio/mpeg"/>
+      <guid isPermaLink="false">ep-campofort-20260618</guid>
       <itunes:duration>300</itunes:duration>
       <itunes:explicit>false</itunes:explicit>
     </item>
+
+    <item>
+      <title><![CDATA[Boletim CampoFort - 17/06/2026]]></title>
+      <description><![CDATA[Boletim semanal com cotacoes de boi gordo, milho e soja para Goias e Mato Grosso. Por Daniel Rodrigues - CampoFort Nutricao Estrategica.]]></description>
+      <pubDate>Wed, 17 Jun 2026 06:00:00 -0300</pubDate>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260617/podcast_campofort_20260617.mp3" type="audio/mpeg"/>
+      <guid isPermaLink="false">ep-campofort-20260617</guid>
+      <itunes:duration>300</itunes:duration>
+      <itunes:explicit>false</itunes:explicit>
+    </item>
+
+    <item>
+      <title><![CDATA[Boletim CampoFort - 03/06/2026]]></title>
+      <description><![CDATA[Boi gordo GO R$ 332,86/@ e MT R$ 353,24/@. Milho GO R$ 55,42/sc. Soja Sul Goiano R$ 111,09/sc.]]></description>
+      <pubDate>Wed, 03 Jun 2026 06:00:00 -0300</pubDate>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/audio/podcast_campofort_20260603.mp3" type="audio/mpeg"/>
+      <guid isPermaLink="false">ep-campofort-20260603</guid>
+      <itunes:duration>240</itunes:duration>
+      <itunes:explicit>false</itunes:explicit>
+    </item>
+
   </channel>
 </rss>
