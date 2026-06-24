@@ -60,4 +60,27 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID:   ${{ secrets.TELEGRAM_CHAT_ID }}
           GITHUB_TOKEN:       ${{ secrets.GITHUB_TOKEN }}
-          GITHUB_REPO:        
+          GITHUB_REPO:        ${{ github.repository }}
+          MODE:               ${{ env.MODE }}
+        run: python scripts/boletim_runner.py
+
+      - name: Commitar arquivos gerados
+        run: |
+          git config user.name  "CampoFort Bot"
+          git config user.email "bot@campofort.com.br"
+          git add output/ podcast_feed.xml docs/podcast_feed.xml episodes.json || true
+          git diff --staged --quiet || \
+            git commit -m "🌾 Boletim CampoFort — $(TZ='America/Sao_Paulo' date +'%d/%m/%Y') [${MODE}]"
+          git push || true
+
+      - name: Salvar arquivos como artefato
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boletim-${{ github.run_id }}
+          path: |
+            output/
+            podcast_feed.xml
+            episodes.json
+          retention-days: 90
+          if-no-files-found: warn

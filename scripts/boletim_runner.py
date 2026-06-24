@@ -415,4 +415,39 @@ def main() -> None:
 
     # ── MODO GENERATE ou FULL: gera conteúdo, áudio e RSS ────────────────────
     telegram_msg, roteiro = generate_content()
-    audio_
+    audio_bytes = generate_audio(roteiro)
+    filename = f"podcast_campofort_{DATE_FILE}.mp3"
+    save_files(telegram_msg, roteiro, audio_bytes)
+
+    # Salvar pending para o modo publish (quarta-feira)
+    PENDING_FILE.write_text(telegram_msg, encoding="utf-8")
+    print(f"  💾 Boletim salvo em {PENDING_FILE}")
+
+    # Spotify RSS — hospedar MP3 no GitHub Releases e atualizar feed
+    audio_url = None
+    if GITHUB_TOKEN:
+        print("\n🎵 Publicando no Spotify RSS via GitHub Releases...")
+        try:
+            audio_url = github_upload_release(audio_bytes, filename)
+            update_rss_feed(audio_url, telegram_msg)
+        except Exception as e:
+            print(f"  ⚠️  RSS/Release falhou (não crítico): {e}")
+    else:
+        print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
+
+    if MODE == "full":
+        # Modo manual: envia Telegram imediatamente
+        print("\n📱 Enviando via Telegram (modo full)...")
+        telegram_send_text(telegram_msg, spotify_url=SPOTIFY_SHOW_URL)
+        print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
+    else:
+        # Modo generate: aguarda quarta para enviar
+        print(f"\n✅ Geração concluída — Telegram será enviado na quarta-feira às 06h BRT")
+        print(f"🎵 Feed RSS atualizado — Spotify processará o episódio durante a noite")
+
+    if audio_url:
+        print(f"🎵 MP3 público: {audio_url}")
+
+
+if __name__ == "__main__":
+    main()
