@@ -18,6 +18,8 @@ ANTHROPIC_API_KEY  = os.environ["ANTHROPIC_API_KEY"]
 OPENAI_API_KEY     = os.environ["OPENAI_API_KEY"]
 GITHUB_TOKEN       = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO        = os.environ.get("GITHUB_REPO", "danielsilvarodriguesdrs-ship-it/podcast-campofort")
+SUPABASE_URL       = os.environ.get("SUPABASE_URL", "https://pcxbsbeywhytmjgouoej.supabase.co")
+SUPABASE_ANON_KEY  = os.environ.get("SUPABASE_ANON_KEY", "")
 # generate = terça (gera tudo, salva pending, não envia Telegram)
 # publish  = quarta (lê pending, envia Telegram com link Spotify)
 # full     = manual (gera + envia imediatamente)
@@ -383,6 +385,47 @@ def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
     print(f"  🎵 URL do feed: {pages_base}/podcast_feed.xml")
 
 
+# ─── Supabase ─────────────────────────────────────────────────────────────────
+def supabase_save_boletim(telegram_msg: str, audio_url: str | None, episode_number: int | None) -> None:
+    """Insere ou atualiza o boletim do dia na tabela boletins do Supabase."""
+    if not SUPABASE_ANON_KEY:
+        print("  ⚠️  SUPABASE_ANON_KEY ausente — boletim não salvo no app")
+        return
+
+    # Resumo curto: primeiras 3 linhas não-vazias
+    desc_lines = [l.strip() for l in telegram_msg.split("\n") if l.strip() and not l.startswith("===")]
+    summary = " ".join(desc_lines[:3])[:300]
+
+    payload = {
+        "title": f"Boletim CampoFort — {DATE_SHORT}",
+        "summary": summary,
+        "content": telegram_msg,
+        "published_at": NOW.strftime("%Y-%m-%dT06:00:00-03:00"),
+        "audio_url": audio_url,
+        "spotify_url": SPOTIFY_SHOW_URL,
+        "episode_number": episode_number,
+    }
+
+    headers = {
+        "apikey": SUPABASE_ANON_KEY,
+        "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates",
+    }
+
+    try:
+        resp = requests.post(
+            f"{SUPABASE_URL}/rest/v1/boletins",
+            json=payload,
+            headers=headers,
+            timeout=15,
+        )
+        resp.raise_for_status()
+        print(f"  ✅ Boletim salvo no Supabase (ep. {episode_number})")
+    except Exception as e:
+        print(f"  ⚠️  Supabase falhou (não crítico): {e}")
+
+
 # ─── Salvar arquivos locais ────────────────────────────────────────────────────
 def save_files(telegram_msg: str, roteiro: str, audio_bytes: bytes) -> None:
     out = Path("output")
@@ -425,15 +468,26 @@ def main() -> None:
 
     # Spotify RSS — hospedar MP3 no GitHub Releases e atualizar feed
     audio_url = None
+    episode_number = None
     if GITHUB_TOKEN:
         print("\n🎵 Publicando no Spotify RSS via GitHub Releases...")
         try:
             audio_url = github_upload_release(audio_bytes, filename)
             update_rss_feed(audio_url, telegram_msg)
+            # Estimar número do episódio pelo episodes.json
+            import json as _json
+            ep_path = Path("episodes.json")
+            if ep_path.exists():
+                eps = _json.loads(ep_path.read_text(encoding="utf-8"))
+                episode_number = len(eps)
         except Exception as e:
             print(f"  ⚠️  RSS/Release falhou (não crítico): {e}")
     else:
         print("  ⚠️  GITHUB_TOKEN ausente — Spotify RSS ignorado")
+
+    # Salvar no Supabase (app CampoFort)
+    print("\n📲 Salvando no Supabase...")
+    supabase_save_boletim(telegram_msg, audio_url, episode_number)
 
     if MODE == "full":
         # Modo manual: envia Telegram imediatamente
