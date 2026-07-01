@@ -29,8 +29,14 @@ MODE = os.environ.get("MODE", "full")
 BRT = datetime.timezone(datetime.timedelta(hours=-3))
 NOW = datetime.datetime.now(BRT)
 
-DATE_SHORT = NOW.strftime("%d/%m/%Y")
-DATE_FILE  = NOW.strftime("%Y%m%d")
+# Data de PUBLICAÇÃO/ENVIO. No modo generate (roda na TERÇA), o conteúdo só é
+# enviado na QUARTA-FEIRA seguinte — então todas as datas (mensagem, áudio,
+# arquivos, RSS, episodes.json) usam o DIA SEGUINTE. Nos modos publish/full a
+# data é a do próprio dia.
+PUB = NOW + datetime.timedelta(days=1) if MODE == "generate" else NOW
+
+DATE_SHORT = PUB.strftime("%d/%m/%Y")
+DATE_FILE  = PUB.strftime("%Y%m%d")
 
 MESES = [
     "janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -40,9 +46,9 @@ DIAS_SEMANA = [
     "segunda-feira", "terça-feira", "quarta-feira",
     "quinta-feira", "sexta-feira", "sábado", "domingo"
 ]
-DATE_LONG = f"{NOW.day} de {MESES[NOW.month - 1]} de {NOW.year}"
-DIA_SEMANA = DIAS_SEMANA[NOW.weekday()]
-MES_ANO = f"{MESES[NOW.month - 1]} de {NOW.year}"
+DATE_LONG = f"{PUB.day} de {MESES[PUB.month - 1]} de {PUB.year}"
+DIA_SEMANA = DIAS_SEMANA[PUB.weekday()]
+MES_ANO = f"{MESES[PUB.month - 1]} de {PUB.year}"
 
 # ─── Prompt de geração ─────────────────────────────────────────────────────────
 PROMPT = f"""Gere o BOLETIM SEMANAL CAMPOFORT — {DATE_SHORT} ({DIA_SEMANA}).
@@ -318,8 +324,8 @@ def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
 
     episode = {
         "titulo": f"Boletim CampoFort — {DATE_SHORT}",
-        "data": NOW.strftime("%Y-%m-%d"),
-        "pubDate": NOW.strftime("%a, %d %b %Y 06:00:00 -0300"),
+        "data": PUB.strftime("%Y-%m-%d"),
+        "pubDate": PUB.strftime("%a, %d %b %Y 06:00:00 -0300"),
         "descricao": descricao,
         "audio_url": audio_url,
         "guid": audio_url
@@ -400,7 +406,7 @@ def supabase_save_boletim(telegram_msg: str, audio_url: str | None, episode_numb
         "title": f"Boletim CampoFort — {DATE_SHORT}",
         "summary": summary,
         "content": telegram_msg,
-        "published_at": NOW.strftime("%Y-%m-%dT06:00:00-03:00"),
+        "published_at": PUB.strftime("%Y-%m-%dT06:00:00-03:00"),
         "audio_url": audio_url,
         "spotify_url": SPOTIFY_SHOW_URL,
         "episode_number": episode_number,
