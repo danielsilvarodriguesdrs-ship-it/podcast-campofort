@@ -27,6 +27,15 @@
     </image>
     
     <item>
+      <title><![CDATA[Boletim CampoFort — 08/07/2026]]></title>
+      <description><![CDATA[📊 *BOLETIM CAMPOFORT* — 08/07/2026 _Quarta-feira | Mercado Agropecuário_ Bom dia, produtor!]]></description>
+      <pubDate>Wed, 08 Jul 2026 06:00:00 -0300</pubDate>
+      <enclosure url="https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260708/podcast_campofort_20260708.mp3" type="audio/mpeg"/>
+      <guid isPermaLink="false">https://github.com/danielsilvarodriguesdrs-ship-it/podcast-campofort/releases/download/ep-20260708/podcast_campofort_20260708.mp3</guid>
+      <itunes:duration>300</itunes:duration>
+      <itunes:explicit>false</itunes:explicit>
+    </item>
+    <item>
       <title><![CDATA[Boletim CampoFort — 30/06/2026]]></title>
       <description><![CDATA[📊 *BOLETIM CAMPOFORT* — 30/06/2026 _Terça-feira | Mercado Agropecuário_ Bom dia, produtor!]]></description>
       <pubDate>Tue, 30 Jun 2026 06:00:00 -0300</pubDate>
