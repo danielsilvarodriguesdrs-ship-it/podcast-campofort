@@ -1,0 +1,47 @@
+# Reels CampoFort - job diario na nuvem.
+# ATENCAO: mova este arquivo para .github/workflows/reels-campofort.yml no VS Code.
+# (O conector nao pode gravar em .github/workflows/ por falta do escopo 'workflow'.)
+# Depois de configurar os secrets e validar via workflow_dispatch, DESCOMENTE o bloco 'schedule'.
+
+name: Reels CampoFort (diario)
+
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Forcar regeracao mesmo se ja houver roteiro hoje'
+        type: boolean
+        default: false
+  # schedule:
+  #   - cron: '35 8 * * *'   # 05:35 BRT (UTC-3) - descomente apos validar
+
+permissions:
+  contents: write
+
+concurrency:
+  group: reels-campofort
+  cancel-in-progress: false
+
+jobs:
+  gerar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar dependencias
+        run: pip install -r reels/requirements.txt
+      - name: Gerar roteiro + commit + Telegram
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          LLM_MODEL: ${{ vars.LLM_MODEL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: '8772182868'
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          GIT_BRANCH: ${{ github.ref_name }}
+          FORCE: ${{ inputs.force }}
+        run: python reels/generator.py
