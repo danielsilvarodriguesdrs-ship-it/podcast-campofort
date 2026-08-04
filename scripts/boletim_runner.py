@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 CampoFort Boletim Semanal — Runner para GitHub Actions
-Gera boletim, roteiro, áudio e envia via Telegram toda quarta-feira às 06h BRT
+Gera boletim, roteiro, áudio e envia via Telegram toda quarta-feira às 05h30 BRT
 """
 
 import os
@@ -211,7 +211,10 @@ def generate_audio(roteiro: str) -> bytes:
 
 # ─── Telegram ─────────────────────────────────────────────────────────────────
 def telegram_send_text(text: str, spotify_url: str = None) -> None:
-    """Envia mensagem de texto. Na última parte, adiciona botão inline do Spotify."""
+    """Envia mensagem de texto. Na última parte, adiciona botão inline do Spotify.
+    Se o Markdown vier malformado (entidade cortada por LLM ou pelo corte em pedaços),
+    o Telegram responde 400 — nesse caso reenvia a mesma parte sem parse_mode, como texto puro,
+    pra garantir que a mensagem chegue de qualquer forma."""
     api_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     chunks = [text[j:j + 4000] for j in range(0, len(text), 4000)]
 
@@ -229,6 +232,10 @@ def telegram_send_text(text: str, spotify_url: str = None) -> None:
                 ]]
             }
         resp = requests.post(api_url, json=payload, timeout=30)
+        if resp.status_code == 400:
+            print(f"  ⚠️ Falha no parse Markdown (parte {i + 1}): {resp.text} — reenviando como texto puro")
+            payload.pop("parse_mode", None)
+            resp = requests.post(api_url, json=payload, timeout=30)
         resp.raise_for_status()
         print(f"  ✅ Texto enviado (parte {i + 1})")
 
@@ -325,7 +332,7 @@ def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
     episode = {
         "titulo": f"Boletim CampoFort — {DATE_SHORT}",
         "data": PUB.strftime("%Y-%m-%d"),
-        "pubDate": PUB.strftime("%a, %d %b %Y 06:00:00 -0300"),
+        "pubDate": PUB.strftime("%a, %d %b %Y 05:30:00 -0300"),
         "descricao": descricao,
         "audio_url": audio_url,
         "guid": audio_url
@@ -406,7 +413,7 @@ def supabase_save_boletim(telegram_msg: str, audio_url: str | None, episode_numb
         "title": f"Boletim CampoFort — {DATE_SHORT}",
         "summary": summary,
         "content": telegram_msg,
-        "published_at": PUB.strftime("%Y-%m-%dT06:00:00-03:00"),
+        "published_at": PUB.strftime("%Y-%m-%dT05:30:00-03:00"),
         "audio_url": audio_url,
         "spotify_url": SPOTIFY_SHOW_URL,
         "episode_number": episode_number,
@@ -502,7 +509,7 @@ def main() -> None:
         print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
     else:
         # Modo generate: aguarda quarta para enviar
-        print(f"\n✅ Geração concluída — Telegram será enviado na quarta-feira às 06h BRT")
+        print(f"\n✅ Geração concluída — Telegram será enviado na quarta-feira às 05h30 BRT")
         print(f"🎵 Feed RSS atualizado — Spotify processará o episódio durante a noite")
 
     if audio_url:

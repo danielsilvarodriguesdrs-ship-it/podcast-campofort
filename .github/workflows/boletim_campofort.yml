@@ -4,8 +4,8 @@ on:
   schedule:
     # TERÇA-FEIRA 18:00 BRT = 21:00 UTC — gera conteúdo, áudio e RSS (Spotify processa à noite)
     - cron: '0 21 * * 2'
-    # QUARTA-FEIRA 06:00 BRT = 09:00 UTC — envia Telegram com link Spotify já publicado
-    - cron: '0 9 * * 3'
+    # QUARTA-FEIRA 05:30 BRT = 08:30 UTC — envia Telegram com link Spotify já publicado
+    - cron: '30 8 * * 3'
   workflow_dispatch:
     inputs:
       mode:
@@ -47,7 +47,7 @@ jobs:
             echo "MODE=${{ github.event.inputs.mode }}" >> $GITHUB_ENV
           elif [[ "${{ github.event.schedule }}" == "0 21 * * 2" ]]; then
             echo "MODE=generate" >> $GITHUB_ENV
-          elif [[ "${{ github.event.schedule }}" == "0 9 * * 3" ]]; then
+          elif [[ "${{ github.event.schedule }}" == "30 8 * * 3" ]]; then
             echo "MODE=publish" >> $GITHUB_ENV
           else
             echo "MODE=full" >> $GITHUB_ENV
