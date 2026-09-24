@@ -202,8 +202,53 @@ def _split_text(text: str, max_chars: int = 3800) -> list[str]:
     return chunks or [text[:max_chars]]
 
 
+# ─── Preparação do texto para a voz ──────────────────────────────────────────
+# Siglas que a voz soletra ou pronuncia errado → forma falada
+SIGLAS_FALADAS = {
+    "B3": "bê três", "IMEA": "Imea", "CEPEA": "Cepea", "ESALQ": "Esalq", "Esalq": "Esalq",
+    "CONAB": "Conab", "USDA": "Departamento de Agricultura americano", "EUA": "Estados Unidos",
+    "GO": "Goiás", "MT": "Mato Grosso", "MS": "Mato Grosso do Sul", "MG": "Minas Gerais",
+    "SP": "São Paulo", "PIB": "pib", "IPCA": "inflação", "CBOT": "Chicago", "FOB": "fob",
+}
+
+
+def _num_extenso(n: str) -> str:
+    from num2words import num2words
+    return num2words(int(n), lang="pt_BR")
+
+
+def preparar_texto_fala(texto: str) -> str:
+    """Deixa o roteiro 'falável': sem títulos/markdown, siglas por extenso e números
+    escritos, para a voz não travar nem soletrar."""
+    import re
+    linhas = []
+    for linha in texto.splitlines():
+        l = linha.strip()
+        # Títulos (**TÍTULO**, # Título, linha toda em maiúsculas) viram só uma pausa
+        if re.fullmatch(r"(\*\*|#+\s*).*", l) or (len(l) > 3 and l.upper() == l and re.search(r"[A-ZÇÃÉ]", l)):
+            linhas.append("")
+            continue
+        linhas.append(l.strip('"“”'))
+    t = "\n".join(linhas)
+    t = re.sub(r"[*_#`]", "", t)
+    for sigla, fala in SIGLAS_FALADAS.items():
+        t = re.sub(rf"\b{re.escape(sigla)}\b", fala, t)
+    # Safra 2026/27 → "vinte e seis, vinte e sete"
+    t = re.sub(r"\b(\d{2})(\d{2})/(\d{2})\b", lambda m: f"{_num_extenso(m[2])}, {_num_extenso(m[3])}", t)
+    # Decimais 13,3 → "treze vírgula três"; percentuais
+    t = re.sub(r"\b(\d+),(\d+)\b", lambda m: f"{_num_extenso(m[1])} vírgula {_num_extenso(m[2])}", t)
+    t = t.replace("%", " por cento")
+    t = re.sub(r"\b\d+\b", lambda m: _num_extenso(m[0]), t)
+    # Palavras soltas em MAIÚSCULAS → normal (senão a voz grita ou soletra)
+    t = re.sub(r"\b[A-ZÁÉÍÓÚÂÊÔÃÕÇ]{3,}\b", lambda m: m[0].capitalize(), t)
+    t = re.sub(r"[ \t]+", " ", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
 def generate_audio(roteiro: str) -> bytes:
     """Gera MP3 com a voz clonada do Daniel (ElevenLabs). Fallback: OpenAI onyx."""
+    roteiro = preparar_texto_fala(roteiro)
     if ELEVENLABS_API_KEY:
         try:
             return generate_audio_elevenlabs(roteiro)
@@ -214,35 +259,49 @@ def generate_audio(roteiro: str) -> bytes:
     return generate_audio_openai(roteiro)
 
 
-def generate_audio_elevenlabs(roteiro: str) -> bytes:
+# Configuração da voz clonada (escolhida por amostras — ver modo "amostras")
+VOZ_CONFIG = {
+    "model_id": "eleven_multilingual_v2",
+    "voice_settings": {"stability": 0.6, "similarity_boost": 0.9, "style": 0.0,
+                       "use_speaker_boost": True, "speed": 1.0},
+}
+
+
+def _elevenlabs_tts(text: str, config: dict, previous_text: str = "", next_text: str = "") -> bytes:
+    payload = {"text": text, **config}
+    # eleven_v3 não aceita encadeamento de contexto entre blocos
+    if config["model_id"] != "eleven_v3":
+        if previous_text:
+            payload["previous_text"] = previous_text
+        if next_text:
+            payload["next_text"] = next_text
+    resp = requests.post(
+        f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}?output_format=mp3_44100_128",
+        headers={"xi-api-key": ELEVENLABS_API_KEY, "Content-Type": "application/json"},
+        json=payload, timeout=180,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:300]}")
+    return resp.content
+
+
+def generate_audio_elevenlabs(roteiro: str, config: dict | None = None) -> bytes:
     """Gera MP3 via ElevenLabs (voz clonada). Blocos ≤ 2500 chars com contexto
     anterior/seguinte para manter a entonação contínua entre os blocos."""
-    print(f"🎙️ Gerando áudio com ElevenLabs (voz clonada {ELEVENLABS_VOICE_ID})...")
+    config = config or VOZ_CONFIG
+    print(f"🎙️ Gerando áudio com ElevenLabs (voz clonada, {config['model_id']})...")
 
     chunks = _split_text(roteiro, max_chars=2500)
     print(f"  📄 Roteiro dividido em {len(chunks)} bloco(s) de áudio")
 
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}?output_format=mp3_44100_128"
-    headers = {"xi-api-key": ELEVENLABS_API_KEY, "Content-Type": "application/json"}
-
     audio_parts: list[bytes] = []
     for i, chunk in enumerate(chunks):
         print(f"  🔊 Gerando bloco {i + 1}/{len(chunks)} ({len(chunk)} chars)...")
-        payload = {
-            "text": chunk,
-            "model_id": "eleven_multilingual_v2",
-            # Stability moderada: um pouco de variação natural evita soar como IA
-            "voice_settings": {"stability": 0.45, "similarity_boost": 0.88, "style": 0.03,
-                               "use_speaker_boost": True, "speed": 0.97},
-        }
-        if i > 0:
-            payload["previous_text"] = chunks[i - 1][-500:]
-        if i < len(chunks) - 1:
-            payload["next_text"] = chunks[i + 1][:500]
-        resp = requests.post(url, headers=headers, json=payload, timeout=180)
-        if resp.status_code != 200:
-            raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:300]}")
-        audio_parts.append(resp.content)
+        audio_parts.append(_elevenlabs_tts(
+            chunk, config,
+            previous_text=chunks[i - 1][-500:] if i > 0 else "",
+            next_text=chunks[i + 1][:500] if i < len(chunks) - 1 else "",
+        ))
 
     return b"".join(audio_parts)
 
@@ -559,6 +618,37 @@ PENDING_FILE      = Path("output/boletim_pending.txt")
 def main() -> None:
     print(f"\n🌾 CampoFort Boletim Runner — {DATE_SHORT} ({DIA_SEMANA}) — modo: {MODE}\n{'─' * 50}")
 
+    # ── MODO AMOSTRAS: mesmo trecho curto em várias configurações de voz, para
+    # escolher de ouvido a mais fiel ao Daniel. Salva em output/amostras/ (artefato).
+    if MODE == "amostras":
+        texto = preparar_texto_fala(
+            "Bom dia, produtor. Olha... a arroba do boi segue firme. "
+            "Em Goiás a gente tá vendo trezentos e quarenta e cinco reais por arroba, "
+            "e no Mato Grosso, trezentos e vinte e nove.\n\n"
+            "Agora presta atenção nisso. Na B3, o contrato de outubro já passa de trezentos e setenta reais. "
+            "Então quem tem boi pronto... tem espaço pra negociar melhor. "
+            "Mas não é só olhar preço, tá? É fazer a conta do custo da diária no cocho."
+        )
+        base = {"use_speaker_boost": True, "speed": 1.0}
+        amostras = {
+            "A_multilingual_estavel": {"model_id": "eleven_multilingual_v2",
+                "voice_settings": {**base, "stability": 0.6, "similarity_boost": 0.9, "style": 0.0}},
+            "B_multilingual_bem_fiel": {"model_id": "eleven_multilingual_v2",
+                "voice_settings": {**base, "stability": 0.75, "similarity_boost": 0.95, "style": 0.0}},
+            "C_turbo_portugues": {"model_id": "eleven_turbo_v2_5", "language_code": "pt",
+                "voice_settings": {**base, "stability": 0.55, "similarity_boost": 0.9}},
+            "D_v3_portugues": {"model_id": "eleven_v3", "language_code": "pt",
+                "voice_settings": {"stability": 0.5, "similarity_boost": 0.9}},
+        }
+        out = Path("output/amostras"); out.mkdir(parents=True, exist_ok=True)
+        for nome, cfg in amostras.items():
+            try:
+                (out / f"{nome}.mp3").write_bytes(_elevenlabs_tts(texto, cfg))
+                print(f"  ✅ Amostra {nome}")
+            except Exception as e:
+                print(f"  ⚠️  Amostra {nome} falhou: {e}")
+        return
+
     # ── MODO AUDIO: refaz só o áudio do dia (voz clonada) a partir do roteiro já
     # gerado, publica com nome novo (o Spotify não rebaixa uma URL já conhecida)
     # e substitui o episódio no feed. Não chama o Claude nem envia Telegram.
@@ -569,7 +659,7 @@ def main() -> None:
             raise SystemExit(f"❌ Roteiro/boletim de {DATE_SHORT} não encontrado em output/")
         if not ELEVENLABS_API_KEY:
             raise SystemExit("❌ ELEVENLABS_API_KEY ausente")
-        audio_bytes = generate_audio_elevenlabs(roteiro_path.read_text(encoding="utf-8"))
+        audio_bytes = generate_audio_elevenlabs(preparar_texto_fala(roteiro_path.read_text(encoding="utf-8")))
         filename = f"podcast_campofort_{DATE_FILE}_v{NOW.strftime('%H%M')}.mp3"
         Path("output", filename).write_bytes(audio_bytes)
         audio_url = github_upload_release(audio_bytes, filename)

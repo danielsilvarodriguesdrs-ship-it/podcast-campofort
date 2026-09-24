@@ -19,6 +19,7 @@ on:
           - publish
           - sync
           - audio
+          - amostras
 
 jobs:
   boletim:
@@ -41,7 +42,7 @@ jobs:
       - name: Instalar dependências
         run: |
           pip install --upgrade pip
-          pip install anthropic openai requests
+          pip install anthropic openai requests num2words
 
       - name: Definir modo de execução
         run: |
