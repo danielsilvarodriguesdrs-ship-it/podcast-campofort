@@ -520,9 +520,11 @@ def main() -> None:
     filename = f"podcast_campofort_{DATE_FILE}.mp3"
     save_files(telegram_msg, roteiro, audio_bytes)
 
-    # Salvar pending para o modo publish (quarta-feira)
-    PENDING_FILE.write_text(telegram_msg, encoding="utf-8")
-    print(f"  💾 Boletim salvo em {PENDING_FILE}")
+    # Salvar pending para o modo publish (quarta-feira). No modo full o envio é
+    # imediato — não deixar pending, senão a quarta reenviaria este boletim.
+    if MODE == "generate":
+        PENDING_FILE.write_text(telegram_msg, encoding="utf-8")
+        print(f"  💾 Boletim salvo em {PENDING_FILE}")
 
     # Spotify RSS — hospedar MP3 no GitHub Releases e atualizar feed
     audio_url = None
