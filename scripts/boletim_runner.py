@@ -122,6 +122,18 @@ _Nutrição estratégica. Resultado no campo._
 [600 a 900 palavras. Ordem: BOI GORDO → MILHO → SOJA → CÂMBIO → POLÍTICA → PANORAMA.
 Análise, contexto e orientação prática para o produtor. Todos os valores POR EXTENSO.]
 
+ESTILO DO ROTEIRO (vai ser falado pela voz clonada do Daniel — tem que soar como ele
+conversando com um produtor, não como locutor lendo matéria):
+- Frases CURTAS e diretas, linguagem falada: "a gente", "tá", "olha", "presta atenção nisso".
+- Varie o tamanho das frases; nada de todas com o mesmo ritmo ou o mesmo final.
+- Use reticências (...) para pausas curtas entre ideias e quebra de parágrafo na troca de assunto.
+- Coloque números, resultados e recomendações no fim da frase, onde a ênfase cai naturalmente.
+- Tom técnico, seguro e próximo, de quem tem experiência de campo. Sem cara de publicidade,
+  telemarketing ou rádio; sem drama; sem formalismo ("vale ressaltar", "cumpre destacar").
+- NÃO escreva sotaque, gírias regionais forçadas nem palavras "caipirizadas".
+  Exemplo BOM: "Produtor... presta atenção nisso. Porque quando a gente fala em ganho de peso... não é só colocar suplemento no cocho."
+  Exemplo RUIM: "Produtor, preste atenção nesta informação, pois quando falamos em ganho de peso dos animais, não devemos considerar apenas o fornecimento de suplemento no cocho."
+
 "Este boletim foi elaborado por Daniel da CampoFort Nutrição Estratégica, representante técnico-comercial da Cria Bem Nutrição Animal. Nutrição estratégica. Resultado no campo. Até a próxima quarta-feira."
 ===ROTEIRO_FIM===
 """
@@ -219,7 +231,9 @@ def generate_audio_elevenlabs(roteiro: str) -> bytes:
         payload = {
             "text": chunk,
             "model_id": "eleven_multilingual_v2",
-            "voice_settings": {"stability": 0.5, "similarity_boost": 0.8, "style": 0.0, "use_speaker_boost": True},
+            # Stability moderada: um pouco de variação natural evita soar como IA
+            "voice_settings": {"stability": 0.45, "similarity_boost": 0.88, "style": 0.03,
+                               "use_speaker_boost": True, "speed": 0.97},
         }
         if i > 0:
             payload["previous_text"] = chunks[i - 1][-500:]
