@@ -261,11 +261,12 @@ def generate_audio(roteiro: str) -> bytes:
 
 # Configuração da voz clonada (escolhida por amostras — ver modo "amostras")
 VOZ_CONFIG = {
-    "model_id": "eleven_multilingual_v2",
-    "voice_settings": {"stability": 0.6, "similarity_boost": 0.9, "style": 0.0,
-                       "use_speaker_boost": True, "speed": 1.0},
+    # Amostra "E" aprovada pelo Daniel em 24/09/2026: v3 em português, modo Robust
+    # (mais preso ao timbre do clone, mantendo a fluidez do v3)
+    "model_id": "eleven_v3",
+    "language_code": "pt",
+    "voice_settings": {"stability": 1.0, "similarity_boost": 0.95},
 }
-
 
 def _elevenlabs_tts(text: str, config: dict, previous_text: str = "", next_text: str = "") -> bytes:
     payload = {"text": text, **config}
