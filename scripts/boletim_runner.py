@@ -15,7 +15,9 @@ from pathlib import Path
 TELEGRAM_BOT_TOKEN = os.environ["TELEGRAM_BOT_TOKEN"]
 TELEGRAM_CHAT_ID   = os.environ["TELEGRAM_CHAT_ID"]
 ANTHROPIC_API_KEY  = os.environ["ANTHROPIC_API_KEY"]
-OPENAI_API_KEY     = os.environ["OPENAI_API_KEY"]
+OPENAI_API_KEY     = os.environ.get("OPENAI_API_KEY", "")
+ELEVENLABS_API_KEY  = os.environ.get("ELEVENLABS_API_KEY", "")
+ELEVENLABS_VOICE_ID = os.environ.get("ELEVENLABS_VOICE_ID") or "8xS29NBUUe3CYDmYeWfq"
 GITHUB_TOKEN       = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO        = os.environ.get("GITHUB_REPO", "danielsilvarodriguesdrs-ship-it/podcast-campofort")
 SUPABASE_URL       = os.environ.get("SUPABASE_URL", "https://pcxbsbeywhytmjgouoej.supabase.co")
@@ -187,6 +189,49 @@ def _split_text(text: str, max_chars: int = 3800) -> list[str]:
 
 
 def generate_audio(roteiro: str) -> bytes:
+    """Gera MP3 com a voz clonada do Daniel (ElevenLabs). Fallback: OpenAI onyx."""
+    if ELEVENLABS_API_KEY:
+        try:
+            return generate_audio_elevenlabs(roteiro)
+        except Exception as e:
+            print(f"  ⚠️  ElevenLabs falhou ({e}) — usando fallback OpenAI onyx")
+    else:
+        print("  ⚠️  ELEVENLABS_API_KEY ausente — usando fallback OpenAI onyx")
+    return generate_audio_openai(roteiro)
+
+
+def generate_audio_elevenlabs(roteiro: str) -> bytes:
+    """Gera MP3 via ElevenLabs (voz clonada). Blocos ≤ 2500 chars com contexto
+    anterior/seguinte para manter a entonação contínua entre os blocos."""
+    print(f"🎙️ Gerando áudio com ElevenLabs (voz clonada {ELEVENLABS_VOICE_ID})...")
+
+    chunks = _split_text(roteiro, max_chars=2500)
+    print(f"  📄 Roteiro dividido em {len(chunks)} bloco(s) de áudio")
+
+    url = f"https://api.elevenlabs.io/v1/text-to-speech/{ELEVENLABS_VOICE_ID}?output_format=mp3_44100_128"
+    headers = {"xi-api-key": ELEVENLABS_API_KEY, "Content-Type": "application/json"}
+
+    audio_parts: list[bytes] = []
+    for i, chunk in enumerate(chunks):
+        print(f"  🔊 Gerando bloco {i + 1}/{len(chunks)} ({len(chunk)} chars)...")
+        payload = {
+            "text": chunk,
+            "model_id": "eleven_multilingual_v2",
+            "voice_settings": {"stability": 0.5, "similarity_boost": 0.8, "style": 0.0, "use_speaker_boost": True},
+        }
+        if i > 0:
+            payload["previous_text"] = chunks[i - 1][-500:]
+        if i < len(chunks) - 1:
+            payload["next_text"] = chunks[i + 1][:500]
+        resp = requests.post(url, headers=headers, json=payload, timeout=180)
+        if resp.status_code != 200:
+            raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:300]}")
+        audio_parts.append(resp.content)
+
+    return b"".join(audio_parts)
+
+
+def generate_audio_openai(roteiro: str) -> bytes:
     """Gera MP3 via OpenAI TTS tts-1-hd, voz 'onyx'. Divide automaticamente se > 4000 chars."""
     print("🎙️ Gerando áudio com OpenAI TTS (voz onyx)...")
 
