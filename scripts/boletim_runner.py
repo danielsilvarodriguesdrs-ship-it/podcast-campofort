@@ -285,6 +285,21 @@ def _elevenlabs_tts(text: str, config: dict, previous_text: str = "", next_text:
     return resp.content
 
 
+def _elevenlabs_sts(audio: bytes, voice_settings: dict) -> bytes:
+    """Voz-para-voz: mantém ritmo e entonação do áudio de entrada e aplica o timbre do clone."""
+    import json as _json
+    resp = requests.post(
+        f"https://api.elevenlabs.io/v1/speech-to-speech/{ELEVENLABS_VOICE_ID}?output_format=mp3_44100_128",
+        headers={"xi-api-key": ELEVENLABS_API_KEY},
+        files={"audio": ("entrada.mp3", audio, "audio/mpeg")},
+        data={"model_id": "eleven_multilingual_sts_v2", "voice_settings": _json.dumps(voice_settings)},
+        timeout=300,
+    )
+    if resp.status_code != 200:
+        raise RuntimeError(f"HTTP {resp.status_code}: {resp.text[:300]}")
+    return resp.content
+
+
 def generate_audio_elevenlabs(roteiro: str, config: dict | None = None) -> bytes:
     """Gera MP3 via ElevenLabs (voz clonada). Blocos ≤ 2500 chars com contexto
     anterior/seguinte para manter a entonação contínua entre os blocos."""
@@ -631,22 +646,32 @@ def main() -> None:
         )
         base = {"use_speaker_boost": True, "speed": 1.0}
         amostras = {
-            "A_multilingual_estavel": {"model_id": "eleven_multilingual_v2",
-                "voice_settings": {**base, "stability": 0.6, "similarity_boost": 0.9, "style": 0.0}},
-            "B_multilingual_bem_fiel": {"model_id": "eleven_multilingual_v2",
-                "voice_settings": {**base, "stability": 0.75, "similarity_boost": 0.95, "style": 0.0}},
-            "C_turbo_portugues": {"model_id": "eleven_turbo_v2_5", "language_code": "pt",
-                "voice_settings": {**base, "stability": 0.55, "similarity_boost": 0.9}},
             "D_v3_portugues": {"model_id": "eleven_v3", "language_code": "pt",
                 "voice_settings": {"stability": 0.5, "similarity_boost": 0.9}},
+            "E_v3_robusto": {"model_id": "eleven_v3", "language_code": "pt",
+                "voice_settings": {"stability": 1.0, "similarity_boost": 0.95}},
+            "F_turbo_solto": {"model_id": "eleven_turbo_v2_5", "language_code": "pt",
+                "voice_settings": {**base, "stability": 0.4, "similarity_boost": 0.9, "style": 0.2}},
         }
         out = Path("output/amostras"); out.mkdir(parents=True, exist_ok=True)
+        gerados: dict[str, bytes] = {}
         for nome, cfg in amostras.items():
             try:
-                (out / f"{nome}.mp3").write_bytes(_elevenlabs_tts(texto, cfg))
+                gerados[nome] = _elevenlabs_tts(texto, cfg)
+                if nome != "D_v3_portugues":
+                    (out / f"{nome}.mp3").write_bytes(gerados[nome])
                 print(f"  ✅ Amostra {nome}")
             except Exception as e:
                 print(f"  ⚠️  Amostra {nome} falhou: {e}")
+        # G = mescla: entonação do v3 (D) + timbre reforçado do clone via voz-para-voz
+        if "D_v3_portugues" in gerados:
+            try:
+                (out / "G_mescla_v3_para_voz_clone.mp3").write_bytes(
+                    _elevenlabs_sts(gerados["D_v3_portugues"],
+                                    {"stability": 0.5, "similarity_boost": 0.95, "use_speaker_boost": True}))
+                print("  ✅ Amostra G_mescla_v3_para_voz_clone")
+            except Exception as e:
+                print(f"  ⚠️  Amostra G falhou: {e}")
         return
 
     # ── MODO AUDIO: refaz só o áudio do dia (voz clonada) a partir do roteiro já
