@@ -22,6 +22,8 @@ GITHUB_TOKEN       = os.environ.get("GITHUB_TOKEN", "")
 GITHUB_REPO        = os.environ.get("GITHUB_REPO", "danielsilvarodriguesdrs-ship-it/podcast-campofort")
 SUPABASE_URL       = os.environ.get("SUPABASE_URL", "https://pcxbsbeywhytmjgouoej.supabase.co")
 SUPABASE_ANON_KEY  = os.environ.get("SUPABASE_ANON_KEY", "")
+# A tabela boletins só aceita escrita com a chave secreta (RLS bloqueia a anon/publishable)
+SUPABASE_KEY       = os.environ.get("SUPABASE_SERVICE_KEY") or SUPABASE_ANON_KEY
 # generate = terça (gera tudo, salva pending, não envia Telegram)
 # publish  = quarta (lê pending, envia Telegram com link Spotify)
 # full     = manual (gera + envia imediatamente)
@@ -444,32 +446,73 @@ def update_rss_feed(audio_url: str, telegram_msg: str) -> None:
 
 
 # ─── Supabase ─────────────────────────────────────────────────────────────────
-def supabase_save_boletim(telegram_msg: str, audio_url: str | None, episode_number: int | None) -> None:
-    """Insere ou atualiza o boletim do dia na tabela boletins do Supabase."""
-    if not SUPABASE_ANON_KEY:
-        print("  ⚠️  SUPABASE_ANON_KEY ausente — boletim não salvo no app")
-        return
+def _supabase_headers() -> dict:
+    return {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates",
+    }
 
+
+def _supabase_payload(title: str, telegram_msg: str, published_at: str,
+                      audio_url: str | None, episode_number: int | None) -> dict:
     # Resumo curto: primeiras 3 linhas não-vazias
     desc_lines = [l.strip() for l in telegram_msg.split("\n") if l.strip() and not l.startswith("===")]
-    summary = " ".join(desc_lines[:3])[:300]
-
-    payload = {
-        "title": f"Boletim CampoFort — {DATE_SHORT}",
-        "summary": summary,
+    return {
+        "title": title,
+        "summary": " ".join(desc_lines[:3])[:300],
         "content": telegram_msg,
-        "published_at": PUB.strftime("%Y-%m-%dT05:30:00-03:00"),
+        "published_at": published_at,
         "audio_url": audio_url,
         "spotify_url": SPOTIFY_SHOW_URL,
         "episode_number": episode_number,
     }
 
-    headers = {
-        "apikey": SUPABASE_ANON_KEY,
-        "Authorization": f"Bearer {SUPABASE_ANON_KEY}",
-        "Content-Type": "application/json",
-        "Prefer": "resolution=merge-duplicates",
-    }
+
+def supabase_sync_missing() -> None:
+    """Insere no app os episódios do episodes.json que ainda não estão no Supabase
+    (ex.: semanas em que o salvamento falhou). Nº do episódio = ordem cronológica."""
+    import json as _json
+    if not SUPABASE_KEY:
+        return
+    ep_path = Path("episodes.json")
+    if not ep_path.exists():
+        return
+    try:
+        resp = requests.get(
+            f"{SUPABASE_URL}/rest/v1/boletins?select=episode_number",
+            headers=_supabase_headers(), timeout=15,
+        )
+        resp.raise_for_status()
+        existing = {r["episode_number"] for r in resp.json()}
+        eps = list(reversed(_json.loads(ep_path.read_text(encoding="utf-8"))))
+        for n, ep in enumerate(eps, 1):
+            if n in existing:
+                continue
+            txt = Path(f"output/boletim_{ep['data'].replace('-', '')}.txt")
+            if not txt.exists():
+                print(f"  ⚠️  Ep. {n} sem arquivo {txt} — pulado")
+                continue
+            payload = _supabase_payload(ep["titulo"], txt.read_text(encoding="utf-8"),
+                                        f"{ep['data']}T05:30:00-03:00", ep["audio_url"], n)
+            r = requests.post(f"{SUPABASE_URL}/rest/v1/boletins",
+                              json=payload, headers=_supabase_headers(), timeout=15)
+            r.raise_for_status()
+            print(f"  ✅ Ep. {n} ({ep['titulo']}) sincronizado no app")
+    except Exception as e:
+        print(f"  ⚠️  Sincronização Supabase falhou (não crítico): {e}")
+
+
+def supabase_save_boletim(telegram_msg: str, audio_url: str | None, episode_number: int | None) -> None:
+    """Insere ou atualiza o boletim do dia na tabela boletins do Supabase."""
+    if not SUPABASE_KEY:
+        print("  ⚠️  SUPABASE_SERVICE_KEY ausente — boletim não salvo no app")
+        return
+
+    payload = _supabase_payload(f"Boletim CampoFort — {DATE_SHORT}", telegram_msg,
+                                PUB.strftime("%Y-%m-%dT05:30:00-03:00"), audio_url, episode_number)
+    headers = _supabase_headers()
 
     try:
         resp = requests.post(
@@ -501,6 +544,12 @@ PENDING_FILE      = Path("output/boletim_pending.txt")
 
 def main() -> None:
     print(f"\n🌾 CampoFort Boletim Runner — {DATE_SHORT} ({DIA_SEMANA}) — modo: {MODE}\n{'─' * 50}")
+
+    # ── MODO SYNC: só completa no app os boletins que faltam no Supabase ──────
+    if MODE == "sync":
+        print("\n📲 Sincronizando boletins faltantes no Supabase...")
+        supabase_sync_missing()
+        return
 
     # ── MODO PUBLISH: apenas envia Telegram com o boletim salvo na terça ──────
     if MODE == "publish":
@@ -548,6 +597,7 @@ def main() -> None:
     # Salvar no Supabase (app CampoFort)
     print("\n📲 Salvando no Supabase...")
     supabase_save_boletim(telegram_msg, audio_url, episode_number)
+    supabase_sync_missing()
 
     if MODE == "full":
         # Modo manual: envia Telegram imediatamente

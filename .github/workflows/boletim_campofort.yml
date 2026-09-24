@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Modo: full (gera+envia), generate (só gera), publish (só envia)'
+        description: 'Modo: full (gera+envia), generate (só gera), publish (só envia), sync (só completa o app)'
         required: false
         default: 'full'
         type: choice
@@ -17,6 +17,7 @@ on:
           - full
           - generate
           - publish
+          - sync
 
 jobs:
   boletim:
@@ -65,6 +66,7 @@ jobs:
           GITHUB_REPO:        ${{ github.repository }}
           SUPABASE_URL:       ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY:  ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
           MODE:               ${{ env.MODE }}
         run: python scripts/boletim_runner.py
 
