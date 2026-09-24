@@ -307,17 +307,31 @@ def generate_audio_elevenlabs(roteiro: str, config: dict | None = None) -> bytes
     config = config or VOZ_CONFIG
     print(f"🎙️ Gerando áudio com ElevenLabs (voz clonada, {config['model_id']})...")
 
-    chunks = _split_text(roteiro, max_chars=2500)
+    # O v3 se perde em blocos longos (pausas enormes/repetições) — usar blocos curtos
+    max_chars = 700 if config["model_id"] == "eleven_v3" else 2500
+    chunks = _split_text(roteiro, max_chars=max_chars)
     print(f"  📄 Roteiro dividido em {len(chunks)} bloco(s) de áudio")
 
     audio_parts: list[bytes] = []
     for i, chunk in enumerate(chunks):
-        print(f"  🔊 Gerando bloco {i + 1}/{len(chunks)} ({len(chunk)} chars)...")
-        audio_parts.append(_elevenlabs_tts(
-            chunk, config,
-            previous_text=chunks[i - 1][-500:] if i > 0 else "",
-            next_text=chunks[i + 1][:500] if i < len(chunks) - 1 else "",
-        ))
+        # Fala normal ≈ 14 caracteres/s; MP3 128 kbps = 16 000 bytes/s.
+        # Bloco muito mais longo que o esperado = alucinação → gera de novo (até 2x).
+        esperado = len(chunk) / 14
+        melhor = None
+        for tentativa in range(3):
+            audio = _elevenlabs_tts(
+                chunk, config,
+                previous_text=chunks[i - 1][-500:] if i > 0 else "",
+                next_text=chunks[i + 1][:500] if i < len(chunks) - 1 else "",
+            )
+            dur = len(audio) / 16000
+            if melhor is None or dur < len(melhor) / 16000:
+                melhor = audio
+            if dur <= esperado * 1.6 + 3:
+                break
+            print(f"  ♻️  Bloco {i + 1} saiu com {dur:.0f}s (esperado ~{esperado:.0f}s) — gerando de novo")
+        print(f"  🔊 Bloco {i + 1}/{len(chunks)}: {len(chunk)} chars → {len(melhor) / 16000:.0f}s")
+        audio_parts.append(melhor)
 
     return b"".join(audio_parts)
 
