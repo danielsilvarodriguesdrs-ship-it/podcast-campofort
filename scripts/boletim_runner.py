@@ -545,6 +545,33 @@ PENDING_FILE      = Path("output/boletim_pending.txt")
 def main() -> None:
     print(f"\n🌾 CampoFort Boletim Runner — {DATE_SHORT} ({DIA_SEMANA}) — modo: {MODE}\n{'─' * 50}")
 
+    # ── MODO AUDIO: refaz só o áudio do dia (voz clonada) a partir do roteiro já
+    # gerado, publica com nome novo (o Spotify não rebaixa uma URL já conhecida)
+    # e substitui o episódio no feed. Não chama o Claude nem envia Telegram.
+    if MODE == "audio":
+        roteiro_path  = Path(f"output/roteiro_{DATE_FILE}.md")
+        boletim_path  = Path(f"output/boletim_{DATE_FILE}.txt")
+        if not roteiro_path.exists() or not boletim_path.exists():
+            raise SystemExit(f"❌ Roteiro/boletim de {DATE_SHORT} não encontrado em output/")
+        if not ELEVENLABS_API_KEY:
+            raise SystemExit("❌ ELEVENLABS_API_KEY ausente")
+        audio_bytes = generate_audio_elevenlabs(roteiro_path.read_text(encoding="utf-8"))
+        filename = f"podcast_campofort_{DATE_FILE}_v{NOW.strftime('%H%M')}.mp3"
+        Path("output", filename).write_bytes(audio_bytes)
+        audio_url = github_upload_release(audio_bytes, filename)
+        update_rss_feed(audio_url, boletim_path.read_text(encoding="utf-8"))
+        if SUPABASE_KEY:
+            try:
+                requests.patch(
+                    f"{SUPABASE_URL}/rest/v1/boletins?title=eq.Boletim CampoFort — {DATE_SHORT}",
+                    json={"audio_url": audio_url}, headers=_supabase_headers(), timeout=15,
+                ).raise_for_status()
+            except Exception as e:
+                print(f"  ⚠️  Supabase audio_url não atualizado (não crítico): {e}")
+            supabase_sync_missing()
+        print(f"\n🏁 Áudio substituído — {audio_url}")
+        return
+
     # ── MODO SYNC: só completa no app os boletins que faltam no Supabase ──────
     if MODE == "sync":
         print("\n📲 Sincronizando boletins faltantes no Supabase...")
