@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-CampoFort Boletim Semanal — Runner para GitHub Actions
-Gera boletim, roteiro, áudio e envia via Telegram toda quarta-feira às 05h30 BRT
+CampoFort Boletim Quinzenal — Runner para GitHub Actions
+Gera boletim, roteiro, áudio e envia via Telegram a cada 14 dias, terça-feira às 05h30 BRT
 """
 
 import os
@@ -24,8 +24,9 @@ SUPABASE_URL       = os.environ.get("SUPABASE_URL", "https://pcxbsbeywhytmjgouoe
 SUPABASE_ANON_KEY  = os.environ.get("SUPABASE_ANON_KEY", "")
 # A tabela boletins só aceita escrita com a chave secreta (RLS bloqueia a anon/publishable)
 SUPABASE_KEY       = os.environ.get("SUPABASE_SERVICE_KEY") or SUPABASE_ANON_KEY
-# generate = terça (gera tudo, salva pending, não envia Telegram)
-# publish  = quarta (lê pending, envia Telegram com link Spotify)
+# generate      = segunda (gera tudo com a data de terça, salva pending, não envia Telegram)
+# generate_hoje = manual (igual ao generate, mas com a data de hoje)
+# publish       = terça (lê pending, envia Telegram com link Spotify)
 # full     = manual (gera + envia imediatamente)
 MODE = os.environ.get("MODE", "full")
 
@@ -33,8 +34,8 @@ MODE = os.environ.get("MODE", "full")
 BRT = datetime.timezone(datetime.timedelta(hours=-3))
 NOW = datetime.datetime.now(BRT)
 
-# Data de PUBLICAÇÃO/ENVIO. No modo generate (roda na TERÇA), o conteúdo só é
-# enviado na QUARTA-FEIRA seguinte — então todas as datas (mensagem, áudio,
+# Data de PUBLICAÇÃO/ENVIO. No modo generate (roda na SEGUNDA), o conteúdo só é
+# enviado na TERÇA-FEIRA seguinte — então todas as datas (mensagem, áudio,
 # arquivos, RSS, episodes.json) usam o DIA SEGUINTE. Nos modos publish/full a
 # data é a do próprio dia.
 PUB = NOW + datetime.timedelta(days=1) if MODE == "generate" else NOW
@@ -55,7 +56,7 @@ DIA_SEMANA = DIAS_SEMANA[PUB.weekday()]
 MES_ANO = f"{MESES[PUB.month - 1]} de {PUB.year}"
 
 # ─── Prompt de geração ─────────────────────────────────────────────────────────
-PROMPT = f"""Gere o BOLETIM SEMANAL CAMPOFORT — {DATE_SHORT} ({DIA_SEMANA}).
+PROMPT = f"""Gere o BOLETIM QUINZENAL CAMPOFORT — {DATE_SHORT} ({DIA_SEMANA}).
 Você representa Daniel Rodrigues, CampoFort Nutrição Estratégica / Cria Bem Nutrição Animal.
 
 REGRAS:
@@ -102,7 +103,7 @@ Bom dia, produtor!
 
 ━━━━━━━━━━━━━━━━━━━━
 🏛️ *POLÍTICA* _(Revista Oeste)_
-▸ _[fato político relevante da semana — 2 linhas]_
+▸ _[fato político relevante das últimas duas semanas — 2 linhas]_
 
 ━━━━━━━━━━━━━━━━━━━━
 🔎 *PANORAMA*
@@ -134,7 +135,7 @@ conversando com um produtor, não como locutor lendo matéria):
   Exemplo BOM: "Produtor... presta atenção nisso. Porque quando a gente fala em ganho de peso... não é só colocar suplemento no cocho."
   Exemplo RUIM: "Produtor, preste atenção nesta informação, pois quando falamos em ganho de peso dos animais, não devemos considerar apenas o fornecimento de suplemento no cocho."
 
-"Este boletim foi elaborado por Daniel da CampoFort Nutrição Estratégica, representante técnico-comercial da Cria Bem Nutrição Animal. Nutrição estratégica. Resultado no campo. Até a próxima quarta-feira."
+"Este boletim foi elaborado por Daniel da CampoFort Nutrição Estratégica, representante técnico-comercial da Cria Bem Nutrição Animal. Nutrição estratégica. Resultado no campo. Até o próximo boletim, daqui a duas semanas."
 ===ROTEIRO_FIM===
 """
 
@@ -753,9 +754,9 @@ def main() -> None:
     filename = f"podcast_campofort_{DATE_FILE}.mp3"
     save_files(telegram_msg, roteiro, audio_bytes)
 
-    # Salvar pending para o modo publish (quarta-feira). No modo full o envio é
-    # imediato — não deixar pending, senão a quarta reenviaria este boletim.
-    if MODE == "generate":
+    # Salvar pending para o modo publish (terça-feira). No modo full o envio é
+    # imediato — não deixar pending, senão o publish reenviaria este boletim.
+    if MODE in ("generate", "generate_hoje"):
         PENDING_FILE.write_text(telegram_msg, encoding="utf-8")
         print(f"  💾 Boletim salvo em {PENDING_FILE}")
 
@@ -789,8 +790,8 @@ def main() -> None:
         telegram_send_text(telegram_msg, spotify_url=SPOTIFY_SHOW_URL)
         print(f"\n🏁 Boletim entregue com sucesso — {DATE_SHORT}")
     else:
-        # Modo generate: aguarda quarta para enviar
-        print(f"\n✅ Geração concluída — Telegram será enviado na quarta-feira às 05h30 BRT")
+        # Modo generate: aguarda o publish para enviar
+        print(f"\n✅ Geração concluída — Telegram será enviado no modo publish")
         print(f"🎵 Feed RSS atualizado — Spotify processará o episódio durante a noite")
 
     if audio_url:

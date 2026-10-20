@@ -1,21 +1,26 @@
 name: Boletim CampoFort Semanal
 
 on:
+  # QUINZENAL: o cron dispara toda semana, mas o passo "Definir modo" só deixa
+  # rodar nas semanas do ciclo (entregas a cada 14 dias a partir de 03/11/2026).
   schedule:
-    # TERÇA-FEIRA 18:00 BRT = 21:00 UTC — gera conteúdo, áudio e RSS (Spotify processa à noite)
-    - cron: '0 21 * * 2'
-    # QUARTA-FEIRA 05:30 BRT = 08:30 UTC — envia Telegram com link Spotify já publicado
-    - cron: '30 8 * * 3'
+    # SEGUNDA-FEIRA 18:00 BRT = 21:00 UTC — gera conteúdo, áudio e RSS (Spotify processa à noite)
+    - cron: '0 21 * * 1'
+    # TERÇA-FEIRA 05:30 BRT = 08:30 UTC — envia Telegram com link Spotify já publicado
+    - cron: '30 8 * * 2'
+    # Envio avulso do boletim de 20/10/2026 às 16:00 BRT (só vale em 2026)
+    - cron: '0 19 20 10 *'
   workflow_dispatch:
     inputs:
       mode:
-        description: 'Modo: full (gera+envia), generate (só gera), publish (só envia), sync (só completa o app), audio (refaz o áudio do dia)'
+        description: 'Modo: full (gera+envia), generate (só gera, data de amanhã), generate_hoje (só gera, data de hoje), publish (só envia), sync (só completa o app), audio (refaz o áudio do dia)'
         required: false
         default: 'full'
         type: choice
         options:
           - full
           - generate
+          - generate_hoje
           - publish
           - sync
           - audio
@@ -46,17 +51,33 @@ jobs:
 
       - name: Definir modo de execução
         run: |
+          # Dias entre a data de ENTREGA (BRT) e a âncora 03/11/2026; ciclo de 14 dias
+          no_ciclo() {
+            local entrega=$1
+            local dias=$(( ( $(date -u -d "$entrega" +%s) - $(date -u -d 2026-11-03 +%s) ) / 86400 ))
+            [[ $(( (dias % 14 + 14) % 14 )) -eq 0 ]]
+          }
+          HOJE=$(TZ=America/Sao_Paulo date +%F)
+          AMANHA=$(TZ=America/Sao_Paulo date -d tomorrow +%F)
+          SCHEDULE="${{ github.event.schedule }}"
           if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
             echo "MODE=${{ github.event.inputs.mode }}" >> $GITHUB_ENV
-          elif [[ "${{ github.event.schedule }}" == "0 21 * * 2" ]]; then
-            echo "MODE=generate" >> $GITHUB_ENV
-          elif [[ "${{ github.event.schedule }}" == "30 8 * * 3" ]]; then
-            echo "MODE=publish" >> $GITHUB_ENV
+          elif [[ "$SCHEDULE" == "0 21 * * 1" ]]; then
+            if no_ciclo "$AMANHA"; then echo "MODE=generate" >> $GITHUB_ENV; else echo "MODE=skip" >> $GITHUB_ENV; fi
+          elif [[ "$SCHEDULE" == "30 8 * * 2" ]]; then
+            if no_ciclo "$HOJE"; then echo "MODE=publish" >> $GITHUB_ENV; else echo "MODE=skip" >> $GITHUB_ENV; fi
+          elif [[ "$SCHEDULE" == "0 19 20 10 *" ]]; then
+            if [[ "$HOJE" == "2026-10-20" ]]; then echo "MODE=publish" >> $GITHUB_ENV; else echo "MODE=skip" >> $GITHUB_ENV; fi
           else
-            echo "MODE=full" >> $GITHUB_ENV
+            echo "MODE=skip" >> $GITHUB_ENV
           fi
 
+      - name: Semana fora do ciclo quinzenal
+        if: env.MODE == 'skip'
+        run: echo "⏭️ Semana fora do ciclo quinzenal (ou envio avulso já passado) — nada a fazer."
+
       - name: Executar Boletim Runner
+        if: env.MODE != 'skip'
         env:
           ANTHROPIC_API_KEY:  ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY:     ${{ secrets.OPENAI_API_KEY }}
@@ -73,6 +94,7 @@ jobs:
         run: python scripts/boletim_runner.py
 
       - name: Commitar arquivos gerados
+        if: env.MODE != 'skip'
         run: |
           git config user.name  "CampoFort Bot"
           git config user.email "bot@campofort.com.br"
@@ -82,7 +104,7 @@ jobs:
           git push || true
 
       - name: Salvar arquivos como artefato
-        if: always()
+        if: always() && env.MODE != 'skip'
         uses: actions/upload-artifact@v4
         with:
           name: boletim-${{ github.run_id }}
