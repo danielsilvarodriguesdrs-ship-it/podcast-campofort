@@ -145,21 +145,34 @@ def generate_content() -> tuple[str, str]:
     print("🔍 Pesquisando cotações e gerando conteúdo via Claude API...")
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    response = client.messages.create(
-        model="claude-sonnet-4-5",
-        max_tokens=6000,
-        tools=[{
-            "type": "web_search_20250305",
-            "name": "web_search",
-            "max_uses": 15
-        }],
-        messages=[{"role": "user", "content": PROMPT}]
-    )
+    messages = [{"role": "user", "content": PROMPT}]
+    full_text = ""
+    # pause_turn: a busca na web pode pausar o turno; reenviar para continuar
+    for _ in range(5):
+        response = client.beta.messages.create(
+            model="claude-sonnet-5-5",
+            max_tokens=16000,
+            output_config={"effort": "medium"},  # equilíbrio qualidade x custo
+            betas=["server-side-fallback-2026-07-01"],
+            fallbacks="default",  # se o modelo recusar, outro modelo assume
+            tools=[{
+                "type": "web_search_20260209",
+                "name": "web_search",
+                "max_uses": 15
+            }],
+            messages=messages,
+        )
+        full_text += "".join(
+            block.text for block in response.content if block.type == "text"
+        )
+        if response.stop_reason != "pause_turn":
+            break
+        messages.append({"role": "assistant", "content": response.content})
 
-    full_text = "".join(
-        block.text for block in response.content
-        if hasattr(block, "text")
-    )
+    if response.stop_reason == "refusal":
+        raise RuntimeError(f"Claude recusou a geração: {response.stop_details}")
+    if response.stop_reason == "max_tokens":
+        print("⚠️ Resposta atingiu max_tokens — conteúdo pode estar truncado.")
 
     # Extrair blocos
     def extract_block(text: str, start_tag: str, end_tag: str) -> str:
